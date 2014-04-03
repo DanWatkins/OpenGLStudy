@@ -39,13 +39,13 @@ extern "C"
 #define SFML_STATIC
 #include <SFML/System.hpp>
 
+#include <glm/glm.hpp>
+
 #define WIN32_LEAN_AND_MEAN 1
 
 #ifdef WIN32
 	#pragma once
 	#define _CRT_SECURE_NO_WARNINGS 1
-
-
 
 	#include <Windows.h>
 
