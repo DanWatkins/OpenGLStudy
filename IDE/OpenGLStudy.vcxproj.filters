@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{74d7e251-6631-4a50-945e-f9921ece7ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ext">
+      <UniqueIdentifier>{d9bc4901-b09f-4e51-a7ca-8f24f399f2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{554c4060-b20e-4dc0-aacd-49e7626b8d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{ad105d5a-f462-4f68-ac7b-a6a4428ffeb0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Src\Core\Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Core\GLFWInput.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Core\OpenGLWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Core\Shader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Render\Circle.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Render\Mesh2D.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Render\Rectangle.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Render\Render.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Utility\Helper.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Utility\Mat3.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Utility\Timer.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Utility\Vec2.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Constants.h" />
+    <ClInclude Include="..\Src\Main.h" />
+    <ClInclude Include="..\Src\OpenGLStudy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Src\Core\GLFWInput.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Core\OpenGLWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Core\Shader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Render\Circle.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Render\Mesh2D.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Render\Rectangle.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Utility\Helper.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Utility\Timer.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Main.cpp" />
+    <ClCompile Include="..\Src\OpenGLStudy.cpp" />
+    <ClCompile Include="..\Ext\GL\gl3w.c">
+      <Filter>Ext</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
