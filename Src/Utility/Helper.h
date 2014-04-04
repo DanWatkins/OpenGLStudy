@@ -9,7 +9,6 @@
 #define _glz_HELPER_H
 
 #include "../Main.h"
-#include "Vec2.h"
 
 namespace glz
 {
@@ -52,8 +51,6 @@ namespace glz
 	Double randFloat();
 	Double randFloat(Double a, Double b);
 	Double randClamped();
-
-	Vec2d pointToWorldSpace(Vec2d localPoint, Vec2d heading, Vec2d side, Vec2d worldPos);
 };
 
 

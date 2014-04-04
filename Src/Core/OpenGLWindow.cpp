@@ -16,8 +16,8 @@ namespace glz
 		mHeight = gDefaultWindowHeight;
 		mTitle = gWindowTitle;
 		mWindow = NULL;
-		mAspectScale = Vec2f(1.0f, 1.0f);
-		mZoom = Vec2f(1.0f, 1.0f);
+		mAspectScale = Vec2(1.0f, 1.0f);
+		mZoom = Vec2(1.0f, 1.0f);
 		mShouldTerminate = false;
 	}
 
@@ -54,9 +54,11 @@ namespace glz
 		//get the aspect scale adjusted
 		_onResize(mWidth, mHeight);
 
+		sf::Clock clock;
+
 		while (!glfwWindowShouldClose(mWindow)  &&  !mShouldTerminate)
 		{
-			onUpdate(0.0); //TODO get a time value for this call
+			onUpdate(clock.getElapsedTime().asSeconds()); //TODO get a time value for this call
 
 			glfwSwapBuffers(mWindow);
 			glfwPollEvents();
@@ -69,7 +71,7 @@ namespace glz
 	}
 
 
-	void OpenGLWindow::setZoom(Vec2f zoom)
+	void OpenGLWindow::setZoom(Vec2 zoom)
 	{
 		mZoom = zoom;
 
@@ -80,7 +82,7 @@ namespace glz
 	}
 
 
-	void OpenGLWindow::addZoom(Vec2f zoom)
+	void OpenGLWindow::addZoom(Vec2 zoom)
 	{
 		mZoom += zoom;
 
@@ -93,7 +95,7 @@ namespace glz
 	
 	void OpenGLWindow::_onResize(Int width, Int height)
 	{
-		mAspectScale = Vec2f((500.0f/width)*mZoom.x, (500.0f/height)*mZoom.y);
+		mAspectScale = Vec2((500.0f/width)*mZoom.x, (500.0f/height)*mZoom.y);
 		mWidth = width;
 		mHeight = height;
 

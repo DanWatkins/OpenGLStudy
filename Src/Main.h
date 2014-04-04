@@ -40,6 +40,7 @@ extern "C"
 #include <SFML/System.hpp>
 
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #define WIN32_LEAN_AND_MEAN 1
 
@@ -90,6 +91,12 @@ typedef GLboolean			Bool;
 struct Color { Float r, g, b, a; };
 
 typedef std::string			String;
+typedef glm::mat2			Mat2;
+typedef glm::mat3			Mat3;
+typedef glm::mat4			Mat4;
+typedef glm::vec2			Vec2;
+typedef glm::vec3			Vec3;
+typedef glm::vec4			Vec4;
 
 #ifdef WIN32
 	#include <memory>
@@ -97,8 +104,6 @@ typedef std::string			String;
 
 #include "Constants.h"
 #include "./Utility/Helper.h"
-#include "./Utility/Vec2.h"
-#include "./Utility/Mat3.h"
 #include "./Utility/Timer.h"
 #include "./Script/Script.h"
 

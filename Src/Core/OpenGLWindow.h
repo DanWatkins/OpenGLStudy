@@ -27,7 +27,7 @@ namespace glz
 		Int mWidth, mHeight;
 		String mTitle;
 		GLFWwindow *mWindow;
-		Vec2f mAspectScale, mZoom;
+		Vec2 mAspectScale, mZoom;
 		Bool mShouldTerminate;
 
 	protected:
@@ -45,10 +45,10 @@ namespace glz
 		Int getHeight() { return mHeight; }
 		String getTitle() { return mTitle; }
 		Bool isWindow(GLFWwindow *window) { return window == mWindow; }
-		Vec2f getAspectScale() { return mAspectScale; }
+		Vec2 getAspectScale() { return mAspectScale; }
 
-		void setZoom(Vec2f zoom);
-		void addZoom(Vec2f zoom);
+		void setZoom(Vec2 zoom);
+		void addZoom(Vec2 zoom);
 
 		void terminate() { mShouldTerminate = true; }
 

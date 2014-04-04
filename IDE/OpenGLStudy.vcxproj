@@ -18,14 +18,8 @@
     <ClInclude Include="..\Src\Core\Shader.h" />
     <ClInclude Include="..\Src\Main.h" />
     <ClInclude Include="..\Src\OpenGLStudy.h" />
-    <ClInclude Include="..\Src\Render\Circle.h" />
-    <ClInclude Include="..\Src\Render\Mesh2D.h" />
-    <ClInclude Include="..\Src\Render\Rectangle.h" />
-    <ClInclude Include="..\Src\Render\Render.h" />
     <ClInclude Include="..\Src\Utility\Helper.h" />
-    <ClInclude Include="..\Src\Utility\Mat3.h" />
     <ClInclude Include="..\Src\Utility\Timer.h" />
-    <ClInclude Include="..\Src\Utility\Vec2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Ext\GL\gl3w.c" />
@@ -34,11 +28,12 @@
     <ClCompile Include="..\Src\Core\Shader.cpp" />
     <ClCompile Include="..\Src\Main.cpp" />
     <ClCompile Include="..\Src\OpenGLStudy.cpp" />
-    <ClCompile Include="..\Src\Render\Circle.cpp" />
-    <ClCompile Include="..\Src\Render\Mesh2D.cpp" />
-    <ClCompile Include="..\Src\Render\Rectangle.cpp" />
     <ClCompile Include="..\Src\Utility\Helper.cpp" />
     <ClCompile Include="..\Src\Utility\Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\Shaders\standard.frag" />
+    <None Include="..\Bin\Shaders\standard.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DB963AF4-49A3-4D23-B569-72107DF1E12E}</ProjectGuid>

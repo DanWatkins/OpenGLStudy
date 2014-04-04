@@ -1,10 +1,10 @@
 #version 430 core
 
-in vec4 shaderColor;
+smooth in vec4 theColor;
 out vec4 color;
 
 
 void main()
 {
-	color = shaderColor;
+	color = theColor;
 }
