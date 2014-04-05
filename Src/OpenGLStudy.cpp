@@ -29,11 +29,6 @@ namespace glz
 	}
 
 
-	Mat3 nullRotation(Float elapsedTime)
-	{
-		return Mat3(1.0f);
-	}
-
 
 	Float computeAngleRad(Float elapsedTime, Float loopDuration)
 	{
@@ -41,6 +36,16 @@ namespace glz
 		Float currentTimeThroughLoop = fmodf(elapsedTime, loopDuration);
 		
 		return currentTimeThroughLoop * scale;
+	}
+
+
+
+	/*=================================================================================================
+	   Rotations
+	=================================================================================================*/
+	Mat3 nullRotation(Float elapsedTime)
+	{
+		return Mat3(1.0f);
 	}
 
 
@@ -114,30 +119,47 @@ namespace glz
 	}
 
 
-	Vec3 dynamicNonUniformScale(Float elapsedTime)
+
+	/*=================================================================================================
+	   Scaling
+	=================================================================================================*/
+
+	Mat3 scale(Float elapsedTime)
 	{
 		const Float loopDurationX = 3.0f;
 		const Float loopDurationY = 5.0f;
 
-		Float x = glm::mix(1.0f, 0.5f, calcLerpFactor(elapsedTime, loopDurationX));
-		Float y = 1.0f;
-		Float z = glm::mix(1.0f, 10.0f, calcLerpFactor(elapsedTime, loopDurationY));
+		Mat3 mat(1.0f);
 
-		return Vec3(x, y, z);
+		mat[0].x = glm::mix(1.0f, 0.5f, calcLerpFactor(elapsedTime, loopDurationX));
+		mat[1].y = 1.0f;
+		mat[2].z = glm::mix(1.0f, 10.0f, calcLerpFactor(elapsedTime, loopDurationY));
+
+		return mat;
 	}
 
 
+
+
+	/*=================================================================================================
+	  Transform combination system
+	=================================================================================================*/
 	struct Instance
 	{
 		typedef Mat3(*RotationFunc)(Float);
+		typedef Mat3(*ScaleFunc)(Float);
 
 		RotationFunc calcRotation;
+		ScaleFunc calcScale;
 		Vec3 offset;
 
 		Mat4 constructMatrix(Float elapsedTime)
 		{
 			const Mat3 &rotationMatrix = calcRotation(elapsedTime);
-			Mat4 mat(rotationMatrix);
+			const Mat3 &scaleMatrix = calcScale(elapsedTime);
+
+
+			Mat4 mat(rotationMatrix * scaleMatrix);
 			mat[3] = Vec4(offset, 1.0f);
 
 			return mat;
@@ -147,11 +169,11 @@ namespace glz
 
 	Instance instanceList[] =
 	{
-		{ nullRotation, Vec3(0.0f, 0.0f, -25.0f) },
-		{ rotateX, Vec3(-5.0f, -5.0f, -25.0f) },
-		{ rotateY, Vec3(-5.0f, 5.0f, -25.0f) },
-		{ rotateZ, Vec3(5.0f, 5.0f, -25.0f) },
-		{ rotateAxis, Vec3(5.0f, -5.0f, -25.0f) },
+		{ nullRotation, scale, Vec3(0.0f, 0.0f, -25.0f) },
+		{ rotateX, scale, Vec3(-5.0f, -5.0f, -25.0f) },
+		{ rotateY, scale, Vec3(-5.0f, 5.0f, -25.0f) },
+		{ rotateZ, scale, Vec3(5.0f, 5.0f, -25.0f) },
+		{ rotateAxis, scale, Vec3(5.0f, -5.0f, -25.0f) },
 	};
 
 

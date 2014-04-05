@@ -10,12 +10,10 @@
 
 #include "Main.h"
 
-const String		gVersion						= "0.10";
-
 const Int			gDefaultWindowWidth				= 1600;
 const Int			gDefaultWindowHeight			= 900;
 
-const String		gWindowTitle					= String("glZombies ") + gVersion;
+const String		gWindowTitle					= String("OpenGL Study");
 
 const String		gDefaultPathAi					= "./Data/AI/";
 const String		gDefaultPathEntity				= "./Data/Entity/";
