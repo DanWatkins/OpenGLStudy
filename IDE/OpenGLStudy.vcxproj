@@ -19,6 +19,7 @@
     <ClInclude Include="..\Src\Main.h" />
     <ClInclude Include="..\Src\OpenGLStudy.h" />
     <ClInclude Include="..\Src\Utility\Helper.h" />
+    <ClInclude Include="..\Src\Utility\MatrixStack.h" />
     <ClInclude Include="..\Src\Utility\Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <ClCompile Include="..\Src\Main.cpp" />
     <ClCompile Include="..\Src\OpenGLStudy.cpp" />
     <ClCompile Include="..\Src\Utility\Helper.cpp" />
+    <ClCompile Include="..\Src\Utility\MatrixStack.cpp" />
     <ClCompile Include="..\Src\Utility\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -106,6 +106,7 @@ typedef glm::vec4			Vec4;
 #include "./Utility/Helper.h"
 #include "./Utility/Timer.h"
 #include "./Script/Script.h"
+#include "./Utility/MatrixStack.h"
 
 #endif
 
