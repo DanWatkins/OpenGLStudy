@@ -130,7 +130,6 @@ namespace glz
 	}
 
 	
-	#define ARRAY_COUNT( array ) (sizeof( array ) / (sizeof( array[0] ) * (sizeof( array ) != sizeof(void*) || sizeof( array[0] ) <= sizeof(void*))))
 
 	void OpenGLStudy::onUpdate(Double currentTime)
 	{

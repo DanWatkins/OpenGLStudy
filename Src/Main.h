@@ -102,6 +102,8 @@ typedef glm::vec4			Vec4;
 	#include <memory>
 #endif
 
+#define ARRAY_COUNT( array ) (sizeof( array ) / (sizeof( array[0] ) * (sizeof( array ) != sizeof(void*) || sizeof( array[0] ) <= sizeof(void*))))
+
 #include "Constants.h"
 #include "./Utility/Helper.h"
 #include "./Utility/Timer.h"

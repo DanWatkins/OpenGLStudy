@@ -26,24 +26,96 @@ namespace glz
 	}
 
 
+	void Hierarchy::drawBase(MatrixStack &modelToCameraStack)
+	{
+		modelToCameraStack.translate(mBasePos);
+		modelToCameraStack.rotateY(mBaseAngle);
+
+		//draw left base
+		{
+			modelToCameraStack.push();
+			modelToCameraStack.translate(mBaseLeftPos);
+			modelToCameraStack.scale(Vec3(1.0f, 1.0f, mBaseScaleZ));
+
+			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+
+			modelToCameraStack.pop();
+		}
+
+		//draw right base
+		{
+			modelToCameraStack.push();
+			modelToCameraStack.translate(mBaseRightPos);
+			modelToCameraStack.scale(Vec3(1.0f, 1.0f, mBaseScaleZ));
+
+			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+
+			modelToCameraStack.pop();
+		}
+
+		drawMainArm(modelToCameraStack);
+	}
+
 
 	void Hierarchy::drawMainArm(MatrixStack &modelToCameraStack)
 	{
+		modelToCameraStack.push();
+		modelToCameraStack.rotateX(mMainArmAngle);
+
+		//draw main arm
+		{
+			modelToCameraStack.push();
+			modelToCameraStack.translate(Vec3(0.0f, 0.0f, (mMainArmSize/2.0f)-1.0f));
+			modelToCameraStack.scale(Vec3(1.0f, 1.0f, mMainArmSize/2.0f));
+
+			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+
+			modelToCameraStack.pop();
+		}
+
 		drawLowerArm(modelToCameraStack);
+
+		modelToCameraStack.pop();
 	}
 
 
 	void Hierarchy::drawLowerArm(MatrixStack &modelToCameraStack)
 	{
+		modelToCameraStack.push();
+		modelToCameraStack.translate(mLowerArmPos);
+		modelToCameraStack.rotateX(mLowerArmAngle);
 
+		//draw lower arm
+		{
+			modelToCameraStack.push();
+			modelToCameraStack.translate(Vec3(0.0f, 0.0f, mLowerArmLength/2.0f));
+			modelToCameraStack.scale(Vec3(mLowerArmWidth/2.0f, mLowerArmWidth/2.0f, mLowerArmWidth/2.0f));
+
+			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+
+			modelToCameraStack.pop();
+		}
+
+		modelToCameraStack.pop();
 	}
 
 
-	void Hierarchy::draw()
+	void Hierarchy::draw(RenderData &renderData)
 	{
 		MatrixStack modelToCameraStack;
+		mRenderData = renderData;
 
-		drawMainArm(modelToCameraStack);
+		glUseProgram(mRenderData.program);
+		glBindVertexArray(mRenderData.vao);
+
+		drawBase(modelToCameraStack);
+
+		glUseProgram(0);
+		glBindVertexArray(0);
 	}
 
 

@@ -12,9 +12,25 @@
 
 namespace glz
 {
+	struct RenderData
+	{
+		Uint program;
+		Uint vao;
+		GLshort *indexData;
+
+		//uniform locations
+		Uint unif_modelToCamera;
+
+		RenderData() : program(0), vao(0), indexData(0), unif_modelToCamera(0) {}
+	};
+
+
+
 	class Hierarchy
 	{
 	private:
+		RenderData mRenderData;
+
 		//base
 		Vec3 mBasePos, mBaseLeftPos, mBaseRightPos;
 		Float mBaseAngle;
@@ -32,13 +48,14 @@ namespace glz
 
 
 	private:
+		void drawBase(MatrixStack &modelToCameraStack);
 		void drawMainArm(MatrixStack &modelToCameraStack);
 		void drawLowerArm(MatrixStack &modelToCameraStack);
 
 	public:
 		Hierarchy();
 
-		void draw();
+		void draw(RenderData &renderData);
 
 		void adjustBase(Bool increment);
 		void adjustMainArm(Bool increment);
