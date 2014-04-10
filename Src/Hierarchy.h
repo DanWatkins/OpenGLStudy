@@ -14,14 +14,23 @@ namespace glz
 {
 	struct RenderData
 	{
-		Uint program;
-		Uint vao;
-		GLshort *indexData;
+		Uint mProgram;
+		Uint mVao;
 
 		//uniform locations
-		Uint unif_modelToCamera;
+		Uint mUnif_modelToCamera;
 
-		RenderData() : program(0), vao(0), indexData(0), unif_modelToCamera(0) {}
+		RenderData(Uint program, Uint vao, Uint unif) :	mProgram(program),
+														mVao(vao),
+														mUnif_modelToCamera(unif) {}
+
+		RenderData()
+		{
+			mProgram = -1;
+			mVao = -1;
+			
+			mUnif_modelToCamera = -1;
+		}
 	};
 
 

@@ -6,9 +6,22 @@
 //=======================================================================================================================|
 
 #include "Hierarchy.h"
+#include "OpenGLStudy.h"
 
 namespace glz
 {
+	inline float clamp(float Value, float minValue, float maxValue)
+	{
+		if (Value < minValue)
+			return minValue;
+
+		if (Value > maxValue)
+			return maxValue;
+
+		return Value;
+	}
+
+
 	Hierarchy::Hierarchy() : mBasePos(Vec3(3.0f, -5.0f, -40.0f)),
 							mBaseLeftPos(Vec3(2.0f, 0.0f, 0.0f)),
 							mBaseRightPos(Vec3(-2.0f, 0.0f, 0.0f)),
@@ -37,8 +50,8 @@ namespace glz
 			modelToCameraStack.translate(mBaseLeftPos);
 			modelToCameraStack.scale(Vec3(1.0f, 1.0f, mBaseScaleZ));
 
-			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
-			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+			glUniformMatrix4fv(mRenderData.mUnif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(indexData), GL_UNSIGNED_SHORT, 0);
 
 			modelToCameraStack.pop();
 		}
@@ -49,8 +62,8 @@ namespace glz
 			modelToCameraStack.translate(mBaseRightPos);
 			modelToCameraStack.scale(Vec3(1.0f, 1.0f, mBaseScaleZ));
 
-			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
-			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+			glUniformMatrix4fv(mRenderData.mUnif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(indexData), GL_UNSIGNED_SHORT, 0);
 
 			modelToCameraStack.pop();
 		}
@@ -70,8 +83,8 @@ namespace glz
 			modelToCameraStack.translate(Vec3(0.0f, 0.0f, (mMainArmSize/2.0f)-1.0f));
 			modelToCameraStack.scale(Vec3(1.0f, 1.0f, mMainArmSize/2.0f));
 
-			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
-			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+			glUniformMatrix4fv(mRenderData.mUnif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(indexData), GL_UNSIGNED_SHORT, 0);
 
 			modelToCameraStack.pop();
 		}
@@ -94,8 +107,8 @@ namespace glz
 			modelToCameraStack.translate(Vec3(0.0f, 0.0f, mLowerArmLength/2.0f));
 			modelToCameraStack.scale(Vec3(mLowerArmWidth/2.0f, mLowerArmWidth/2.0f, mLowerArmWidth/2.0f));
 
-			glUniformMatrix4fv(mRenderData.unif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
-			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(mRenderData.indexData), GL_UNSIGNED_SHORT, 0);
+			glUniformMatrix4fv(mRenderData.mUnif_modelToCamera, 1, GL_FALSE, glm::value_ptr(modelToCameraStack.top()));
+			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(indexData), GL_UNSIGNED_SHORT, 0);
 
 			modelToCameraStack.pop();
 		}
@@ -109,8 +122,8 @@ namespace glz
 		MatrixStack modelToCameraStack;
 		mRenderData = renderData;
 
-		glUseProgram(mRenderData.program);
-		glBindVertexArray(mRenderData.vao);
+		glUseProgram(mRenderData.mProgram);
+		glBindVertexArray(mRenderData.mVao);
 
 		drawBase(modelToCameraStack);
 
@@ -119,17 +132,26 @@ namespace glz
 	}
 
 
+	#define STANDARD 11.25f
+	#define SMALL 9.0f
+
 	void Hierarchy::adjustBase(Bool increment)
 	{
+		mBaseAngle += increment ? STANDARD : -STANDARD;
+		mBaseAngle = fmodf(mBaseAngle, 360.0f);
 	}
 
 
 	void Hierarchy::adjustMainArm(Bool increment)
 	{
+		mMainArmAngle += increment ? STANDARD : -STANDARD;
+		mMainArmAngle = clamp(mMainArmAngle, -90.0f, 0.0f);
 	}
 
 
 	void Hierarchy::adjustLowerArm(Bool increment)
 	{
+		mLowerArmAngle += increment ? STANDARD : -STANDARD;
+		mLowerArmAngle = clamp(mLowerArmAngle, 0.0f, 146.0f);
 	}
 };

@@ -11,6 +11,8 @@
 
 namespace glz
 {	
+	Hierarchy hierarchy;
+
 	Float calcFrustumScale(Float fovDeg)
 	{
 		Float fovRad = degToRad(fovDeg);
@@ -85,6 +87,18 @@ namespace glz
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+
+		size_t colorDataOffset = sizeof(Float)* 3 * numberOfVertices;
+		glBindBuffer(GL_ARRAY_BUFFER, vao);
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)colorDataOffset);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+		glBindVertexArray(0);
 	}
 
 
@@ -105,19 +119,6 @@ namespace glz
 
 		initGlProgram();
 		initVertexBuffer();
-
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
-
-		size_t colorDataOffset = sizeof(Float) * 3 * numberOfVertices;
-		glBindBuffer(GL_ARRAY_BUFFER, vao);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)colorDataOffset);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-		glBindVertexArray(0);
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
@@ -140,13 +141,8 @@ namespace glz
 		glClearDepth(1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(mProgram);
-		glBindVertexArray(vao);
-
-		
-
-		glBindVertexArray(0);
-		glUseProgram(0);
+		RenderData rd = { mProgram, vao, modelToCameraUnif };
+		hierarchy.draw(rd);
 	}
 
 
@@ -169,6 +165,15 @@ namespace glz
 
 				break;
 			}
+
+			case GLFW_KEY_A: hierarchy.adjustBase(true); break;
+			case GLFW_KEY_D: hierarchy.adjustBase(false); break;
+
+			case GLFW_KEY_W: hierarchy.adjustMainArm(false); break;
+			case GLFW_KEY_S: hierarchy.adjustMainArm(true); break;
+
+			case GLFW_KEY_R: hierarchy.adjustLowerArm(false); break;
+			case GLFW_KEY_F: hierarchy.adjustLowerArm(true); break;
 		}
 	}
 
