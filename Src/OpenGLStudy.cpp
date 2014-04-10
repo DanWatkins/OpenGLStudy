@@ -7,7 +7,7 @@
 
 #include "OpenGLStudy.h"
 #include "./Core/Core.h"
-
+#include "Hierarchy.h"
 
 namespace glz
 {	
@@ -39,142 +39,6 @@ namespace glz
 	}
 
 
-
-	/*=================================================================================================
-	   Rotations
-	=================================================================================================*/
-	Mat3 nullRotation(Float elapsedTime)
-	{
-		return Mat3(1.0f);
-	}
-
-
-	Mat3 rotateX(Float elapsedTime)
-	{
-		Float angleRad = computeAngleRad(elapsedTime, 2.0f);
-		Float lCos = cosf(angleRad);
-		Float lSin = sinf(angleRad);
-
-		Mat3 theMat(1.0f);
-		theMat[1].y = lCos; theMat[2].y = -lSin;
-		theMat[1].z = lSin; theMat[2].z = lCos;
-
-		return theMat;
-	}
-
-
-	Mat3 rotateY(Float elapsedTime)
-	{
-		Float angleRad = computeAngleRad(elapsedTime, 2.0f);
-		Float lCos = cosf(angleRad);
-		Float lSin = sinf(angleRad);
-
-		Mat3 theMat(1.0f);
-		theMat[0].x = lCos; theMat[2].x = lSin;
-		theMat[0].z = -lSin; theMat[2].z = lCos;
-
-		return theMat;
-	}
-
-
-	Mat3 rotateZ(Float elapsedTime)
-	{
-		Float angleRad = computeAngleRad(elapsedTime, 2.0f);
-		Float lCos = cosf(angleRad);
-		Float lSin = sinf(angleRad);
-
-		Mat3 theMat(1.0f);
-		theMat[0].x = lCos; theMat[1].x = -lSin;
-		theMat[0].y = lSin; theMat[1].y = lCos;
-
-		return theMat;
-	}
-
-
-	Mat3 rotateAxis(Float elapsedTime)
-	{
-		float fAngRad = computeAngleRad(elapsedTime, 2.0);
-		float fCos = cosf(fAngRad);
-		float fInvCos = 1.0f - fCos;
-		float fSin = sinf(fAngRad);
-		float fInvSin = 1.0f - fSin;
-
-		Vec3 axis(1.0f, 1.0f, 1.0f);
-		axis = glm::normalize(axis);
-
-		Mat3 theMat(1.0f);
-		theMat[0].x = (axis.x * axis.x) + ((1 - axis.x * axis.x) * fCos);
-		theMat[1].x = axis.x * axis.y * (fInvCos)-(axis.z * fSin);
-		theMat[2].x = axis.x * axis.z * (fInvCos)+(axis.y * fSin);
-
-		theMat[0].y = axis.x * axis.y * (fInvCos)+(axis.z * fSin);
-		theMat[1].y = (axis.y * axis.y) + ((1 - axis.y * axis.y) * fCos);
-		theMat[2].y = axis.y * axis.z * (fInvCos)-(axis.x * fSin);
-
-		theMat[0].z = axis.x * axis.z * (fInvCos)-(axis.y * fSin);
-		theMat[1].z = axis.y * axis.z * (fInvCos)+(axis.x * fSin);
-		theMat[2].z = (axis.z * axis.z) + ((1 - axis.z * axis.z) * fCos);
-
-		return theMat;
-	}
-
-
-
-	/*=================================================================================================
-	   Scaling
-	=================================================================================================*/
-
-	Mat3 scale(Float elapsedTime)
-	{
-		const Float loopDurationX = 3.0f;
-		const Float loopDurationY = 5.0f;
-
-		Mat3 mat(1.0f);
-
-		mat[0].x = glm::mix(1.0f, 0.5f, calcLerpFactor(elapsedTime, loopDurationX));
-		mat[1].y = 1.0f;
-		mat[2].z = glm::mix(1.0f, 10.0f, calcLerpFactor(elapsedTime, loopDurationY));
-
-		return mat;
-	}
-
-
-
-
-	/*=================================================================================================
-	  Transform combination system
-	=================================================================================================*/
-	struct Instance
-	{
-		typedef Mat3(*RotationFunc)(Float);
-		typedef Mat3(*ScaleFunc)(Float);
-
-		RotationFunc calcRotation;
-		ScaleFunc calcScale;
-		Vec3 offset;
-
-		Mat4 constructMatrix(Float elapsedTime)
-		{
-			const Mat3 &rotationMatrix = calcRotation(elapsedTime);
-			const Mat3 &scaleMatrix = calcScale(elapsedTime);
-
-
-			Mat4 mat(rotationMatrix * scaleMatrix);
-			mat[3] = Vec4(offset, 1.0f);
-
-			return mat;
-		}
-	};
-
-
-	Instance instanceList[] =
-	{
-		{ nullRotation, scale, Vec3(0.0f, 0.0f, -25.0f) },
-		{ rotateX, scale, Vec3(-5.0f, -5.0f, -25.0f) },
-		{ rotateY, scale, Vec3(-5.0f, 5.0f, -25.0f) },
-		{ rotateZ, scale, Vec3(5.0f, 5.0f, -25.0f) },
-		{ rotateAxis, scale, Vec3(5.0f, -5.0f, -25.0f) },
-	};
 
 
 	const Float frustumScale = calcFrustumScale(45.0f);
@@ -222,13 +86,6 @@ namespace glz
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	}
-
-
-
-
-
-
-
 
 
 
@@ -287,15 +144,7 @@ namespace glz
 		glUseProgram(mProgram);
 		glBindVertexArray(vao);
 
-		Float elapsedTime = currentTime;
-		for (Int n=0; n<ARRAY_COUNT(instanceList); n++)
-		{
-			Instance &instance = instanceList[n];
-			const Mat4 &transformMatrix = instance.constructMatrix(elapsedTime);
-
-			glUniformMatrix4fv(modelToCameraUnif, 1, GL_FALSE, glm::value_ptr(transformMatrix));
-			glDrawElements(GL_TRIANGLES, ARRAY_COUNT(indexData), GL_UNSIGNED_SHORT, 0);
-		}
+		
 
 		glBindVertexArray(0);
 		glUseProgram(0);

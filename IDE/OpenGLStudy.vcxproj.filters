@@ -39,6 +39,7 @@
     <ClInclude Include="..\Src\Utility\MatrixStack.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Hierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\Core\GLFWInput.cpp">
@@ -64,6 +65,7 @@
     <ClCompile Include="..\Src\Utility\MatrixStack.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Hierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Shaders\standard.frag">
