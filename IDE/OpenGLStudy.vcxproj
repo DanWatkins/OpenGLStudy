@@ -16,11 +16,9 @@
     <ClInclude Include="..\Src\Core\GLFWInput.h" />
     <ClInclude Include="..\Src\Core\OpenGLWindow.h" />
     <ClInclude Include="..\Src\Core\Shader.h" />
-    <ClInclude Include="..\src\Hierarchy.h" />
     <ClInclude Include="..\Src\Main.h" />
     <ClInclude Include="..\Src\OpenGLStudy.h" />
     <ClInclude Include="..\Src\Utility\Helper.h" />
-    <ClInclude Include="..\Src\Utility\MatrixStack.h" />
     <ClInclude Include="..\Src\Utility\Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -28,11 +26,9 @@
     <ClCompile Include="..\Src\Core\GLFWInput.cpp" />
     <ClCompile Include="..\Src\Core\OpenGLWindow.cpp" />
     <ClCompile Include="..\Src\Core\Shader.cpp" />
-    <ClCompile Include="..\src\Hierarchy.cpp" />
     <ClCompile Include="..\Src\Main.cpp" />
     <ClCompile Include="..\Src\OpenGLStudy.cpp" />
     <ClCompile Include="..\Src\Utility\Helper.cpp" />
-    <ClCompile Include="..\Src\Utility\MatrixStack.cpp" />
     <ClCompile Include="..\Src\Utility\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

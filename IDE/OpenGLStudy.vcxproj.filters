@@ -36,10 +36,6 @@
     <ClInclude Include="..\Src\Constants.h" />
     <ClInclude Include="..\Src\Main.h" />
     <ClInclude Include="..\Src\OpenGLStudy.h" />
-    <ClInclude Include="..\Src\Utility\MatrixStack.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Hierarchy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\Core\GLFWInput.cpp">
@@ -62,10 +58,6 @@
     <ClCompile Include="..\Ext\GL\gl3w.c">
       <Filter>Ext</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Utility\MatrixStack.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Hierarchy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Shaders\standard.frag">
