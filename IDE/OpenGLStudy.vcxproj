@@ -11,6 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Ext\framework\directories.h" />
+    <ClInclude Include="..\Ext\framework\framework.h" />
+    <ClInclude Include="..\Ext\framework\framework_all.h" />
+    <ClInclude Include="..\Ext\framework\Interpolators.h" />
+    <ClInclude Include="..\Ext\framework\Mesh.h" />
+    <ClInclude Include="..\Ext\framework\MousePole.h" />
+    <ClInclude Include="..\Ext\framework\rapidxml.hpp" />
+    <ClInclude Include="..\Ext\framework\rapidxml_helpers.h" />
+    <ClInclude Include="..\Ext\framework\rapidxml_iterators.hpp" />
+    <ClInclude Include="..\Ext\framework\rapidxml_print.hpp" />
+    <ClInclude Include="..\Ext\framework\rapidxml_utils.hpp" />
+    <ClInclude Include="..\Ext\framework\Scene.h" />
+    <ClInclude Include="..\Ext\framework\SceneBinders.h" />
+    <ClInclude Include="..\Ext\framework\Timer.h" />
+    <ClInclude Include="..\Ext\framework\UniformBlockArray.h" />
+    <ClInclude Include="..\Ext\glutil\Debug.h" />
+    <ClInclude Include="..\Ext\glutil\glutil.h" />
+    <ClInclude Include="..\Ext\glutil\MatrixStack.h" />
+    <ClInclude Include="..\Ext\glutil\MousePoles.h" />
+    <ClInclude Include="..\Ext\glutil\Shader.h" />
+    <ClInclude Include="..\Ext\glutil\WindowPos.h" />
     <ClInclude Include="..\Src\Constants.h" />
     <ClInclude Include="..\Src\Core\Core.h" />
     <ClInclude Include="..\Src\Core\GLFWInput.h" />
@@ -22,6 +43,16 @@
     <ClInclude Include="..\Src\Utility\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Ext\framework\empty.cpp" />
+    <ClCompile Include="..\Ext\framework\framework.cpp" />
+    <ClCompile Include="..\Ext\framework\Mesh.cpp" />
+    <ClCompile Include="..\Ext\framework\Scene.cpp" />
+    <ClCompile Include="..\Ext\framework\Timer.cpp" />
+    <ClCompile Include="..\Ext\glutil\Debug.cpp" />
+    <ClCompile Include="..\Ext\glutil\MatrixStack.cpp" />
+    <ClCompile Include="..\Ext\glutil\MousePoles.cpp" />
+    <ClCompile Include="..\Ext\glutil\Shader.cpp" />
+    <ClCompile Include="..\Ext\glutil\WindowPos.cpp" />
     <ClCompile Include="..\Ext\GL\gl3w.c" />
     <ClCompile Include="..\Src\Core\GLFWInput.cpp" />
     <ClCompile Include="..\Src\Core\OpenGLWindow.cpp" />

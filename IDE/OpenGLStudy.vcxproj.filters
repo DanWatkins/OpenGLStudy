@@ -13,6 +13,12 @@
     <Filter Include=".Bin">
       <UniqueIdentifier>{4407452c-2f6c-4f96-874a-3c04e47c9744}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ext\framework">
+      <UniqueIdentifier>{68cf69cf-667e-42f1-9fa4-9c0a75feb6cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ext\glutil">
+      <UniqueIdentifier>{6a8d060e-a5d0-4486-a3d5-b1329905037c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\Core\Core.h">
@@ -36,6 +42,69 @@
     <ClInclude Include="..\Src\Constants.h" />
     <ClInclude Include="..\Src\Main.h" />
     <ClInclude Include="..\Src\OpenGLStudy.h" />
+    <ClInclude Include="..\Ext\framework\directories.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\framework.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\framework_all.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\Interpolators.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\Mesh.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\MousePole.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\rapidxml.hpp">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\rapidxml_helpers.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\rapidxml_iterators.hpp">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\rapidxml_print.hpp">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\rapidxml_utils.hpp">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\Scene.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\SceneBinders.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\Timer.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\framework\UniformBlockArray.h">
+      <Filter>Ext\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\glutil\Debug.h">
+      <Filter>Ext\glutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\glutil\glutil.h">
+      <Filter>Ext\glutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\glutil\MatrixStack.h">
+      <Filter>Ext\glutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\glutil\MousePoles.h">
+      <Filter>Ext\glutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\glutil\Shader.h">
+      <Filter>Ext\glutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Ext\glutil\WindowPos.h">
+      <Filter>Ext\glutil</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\Core\GLFWInput.cpp">
@@ -57,6 +126,36 @@
     <ClCompile Include="..\Src\OpenGLStudy.cpp" />
     <ClCompile Include="..\Ext\GL\gl3w.c">
       <Filter>Ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\framework\empty.cpp">
+      <Filter>Ext\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\framework\framework.cpp">
+      <Filter>Ext\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\framework\Mesh.cpp">
+      <Filter>Ext\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\framework\Scene.cpp">
+      <Filter>Ext\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\framework\Timer.cpp">
+      <Filter>Ext\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\glutil\Debug.cpp">
+      <Filter>Ext\glutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\glutil\MatrixStack.cpp">
+      <Filter>Ext\glutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\glutil\MousePoles.cpp">
+      <Filter>Ext\glutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\glutil\Shader.cpp">
+      <Filter>Ext\glutil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Ext\glutil\WindowPos.cpp">
+      <Filter>Ext\glutil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

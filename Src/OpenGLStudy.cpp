@@ -10,6 +10,9 @@
 
 namespace glz
 {	
+	//=================================================================================================
+	// Utility
+	//=================================================================================================
 	Float calcFrustumScale(Float fovDeg)
 	{
 		Float fovRad = degToRad(fovDeg);
@@ -37,15 +40,62 @@ namespace glz
 	}
 
 
-	void OpenGLStudy::initGlProgram()
+	Mat4 calcLookAtMatrix(Vec3 cameraPos, Vec3 lookAtPos, Vec3 upPos)
+	{
+		Vec3 lookDir = glm::normalize(lookAtPos - cameraPos);
+		Vec3 upDir = glm::normalize(upPos);
+
+		Vec3 rightDir = glm::normalize(glm::cross(lookDir, upDir));
+		Vec3 perpUpDir = glm::cross(rightDir, lookDir);
+
+		Mat4 rotation(1.0f);
+		rotation[0] = Vec4(rightDir, 0.0f);
+		rotation[1] = Vec4(perpUpDir, 0.0f);
+		rotation[2] = Vec4(-lookDir, 0.0f);
+
+		rotation = glm::transpose(rotation);
+
+		Mat4 translation(1.0f);
+		translation[3] = Vec4(-cameraPos, 1.0f);
+
+		return rotation * translation;
+	}
+
+
+
+	//=================================================================================================
+	// Drawing
+	//=================================================================================================
+	void DrawTree(MatrixStack &modelMatrix, Float trunkHeight=2.0f, Float coneHeight=3.0f)
 	{
 
 	}
 
 
-	void OpenGLStudy::initVertexBuffer()
+	void DrawForest(MatrixStack &modelMatrix)
 	{
-		
+
+	}
+
+
+	//=================================================================================================
+	// Initialization
+	//=================================================================================================
+	ProgramData loadProgram(String vertexShader, String fragmentShader)
+	{
+		Uint shaders[2];
+		shaders[0] = Shader::loadShader(String(gDefaultPathShader+vertexShader), GL_VERTEX_SHADER);
+		shaders[1] = Shader::loadShader(String(gDefaultPathShader+fragmentShader), GL_FRAGMENT_SHADER);
+
+		Shader::linkFromShaders(shaders, 2);
+	}
+
+
+	void OpenGLStudy::initGlProgram()
+	{
+		uniformColor = loadProgram("PosOnlyWorldTransform.vert", "ColorUniform.frag");
+		objectColor = loadProgram("PosColorWorldTransform.vert", "ColorPassthrough.frag");
+		uniformColorTint = loadProgram("PosColorWorldTransform.vert", "ColorMultUniform.frag");
 	}
 
 
@@ -57,11 +107,37 @@ namespace glz
 	void OpenGLStudy::onStartup()
 	{
 		initGlProgram();
-		initVertexBuffer();
+
+		try
+		{
+			meshCone = new Mesh("UnitConeTint.xml");
+			meshCylinder = new Mesh("UnitCylinderTint.xml");
+			meshCubeTint = new Mesh("UnitCubeTint.xml");
+			meshCubeColor = new Mesh("UnitCubeColor.xml");
+			meshPlane = new Mesh("UnitPlane.xml");
+		}
+		catch (std::exception &e)
+		{
+			printf("%s\n", e.what());
+			throw;
+		}
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CW);
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+		glDepthFunc(GL_LEQUAL);
+		glDepthRange(0.0f, 1.0f);
+		glEnable(GL_DEPTH_CLAMP);
 	}
 
 	
 
+	//=================================================================================================
+	// Update
+	//=================================================================================================
 	void OpenGLStudy::onUpdate(Double currentTime)
 	{
 		static const Float clearColor[] = { 1.0f, 1.0f, 0.9f, 1.0f };
