@@ -15,11 +15,8 @@ const Int			gDefaultWindowHeight			= 900;
 
 const String		gWindowTitle					= String("OpenGL Study");
 
-const String		gDefaultPathAi					= "./Data/AI/";
-const String		gDefaultPathEntity				= "./Data/Entity/";
-const String		gDefaultPathMesh				= "./Data/Mesh/";
-
-const String		gDefaultPathShaders				 = "./Shaders/";
+const String		gDefaultPathMesh				= "./Mesh/";
+const String		gDefaultPathShaders				 = "./Shader/";
 
 #endif
 
