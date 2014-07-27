@@ -1,17 +1,18 @@
-//=======================================================================================================================|
-// Created 2013.11.16 by Daniel L. Watkins
-//
-// Copyright (C) 2013-2014 Daniel L. Watkins
-// This file is licensed under the MIT License.
-//=======================================================================================================================|
+#include <QApplication>
+#include "triangletest.h"
 
-#include "Main.h"
-#include "OpenGLStudy.h"
-
-using namespace glz;
-
-Int main()
+int main(int argc, char *argv[])
 {
-	OpenGLStudy *app = new OpenGLStudy;
-	return app->init(1600, 900, gWindowTitle);
+    QGuiApplication app(argc, argv);
+    QSurfaceFormat format;
+    format.setSamples(16);
+
+    TriangleWindow window;
+    window.setFormat(format);
+    window.resize(800, 600);
+    window.show();
+
+    window.setAnimating(true);
+
+    return app.exec();
 }
