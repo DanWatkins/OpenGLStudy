@@ -1,4 +1,4 @@
-#include "triangletest.h"
+#include "MainWindow.h"
 
 static const char *vertexShaderSource =
     "attribute highp vec4 posAttr;\n"
@@ -17,7 +17,7 @@ static const char *fragmentShaderSource =
     "}\n";
 
 
-GLuint TriangleWindow::loadShader(GLenum type, const char *source)
+GLuint MainWindow::loadShader(GLenum type, const char *source)
 {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, 0);
@@ -25,7 +25,7 @@ GLuint TriangleWindow::loadShader(GLenum type, const char *source)
     return shader;
 }
 
-void TriangleWindow::initialize()
+void MainWindow::initialize()
 {
     m_program = new QOpenGLShaderProgram(this);
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
@@ -37,7 +37,7 @@ void TriangleWindow::initialize()
 }
 
 
-void TriangleWindow::render()
+void MainWindow::render()
 {
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
@@ -50,6 +50,8 @@ void TriangleWindow::render()
     matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -2);
     matrix.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
+
+
 
     m_program->setUniformValue(m_matrixUniform, matrix);
 

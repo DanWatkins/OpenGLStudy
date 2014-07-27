@@ -14,14 +14,11 @@ TEMPLATE = app
 CONFIG += mobility
 MOBILITY = 
 
-FORMS +=
-
 HEADERS += \
-    Src/openglwindow.h \
-    Src/triangletest.h
+    Src/MainWindow.h \
+    Src/OpenGLWindow.h
 
 SOURCES += \
-    Src/main.cpp \
-    Src/openglwindow.cpp \
-    Src/triangletest.cpp
-
+    Src/Main.cpp \
+    Src/MainWindow.cpp \
+    Src/OpenGLWindow.cpp

@@ -1,5 +1,5 @@
 #include <QApplication>
-#include "triangletest.h"
+#include "MainWindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     QSurfaceFormat format;
     format.setSamples(16);
 
-    TriangleWindow window;
+    MainWindow window;
     window.setFormat(format);
     window.resize(800, 600);
     window.show();

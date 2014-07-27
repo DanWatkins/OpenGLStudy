@@ -4,10 +4,10 @@
 #include "openglwindow.h"
 
 
-class TriangleWindow : public OpenGLWindow
+class MainWindow : public OpenGLWindow
 {
 public:
-    TriangleWindow()
+    MainWindow()
         : m_program(0)
         , m_frame(0)
     {
