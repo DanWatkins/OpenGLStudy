@@ -14,7 +14,8 @@ class MainWindow : public OpenGLWindow
 {
 public:
 	MainWindow()
-		: mProgram(0)
+		: mProgram(0),
+		  mTexture(0)
 	{
 	}
 
@@ -23,6 +24,8 @@ public:
 
 private:
 	QOpenGLShaderProgram *mProgram;
+
+	GLuint mTexture, mVao;
 };
 
 #endif

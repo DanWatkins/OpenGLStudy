@@ -9,8 +9,9 @@
 #define OPENGLWINDOW_H
 
 #include "Main.h"
+#include <QOpenGLFunctions_4_3_Core>
 
-class OpenGLWindow : public QWindow, protected QOpenGLFunctions
+class OpenGLWindow : public QWindow, protected QOpenGLFunctions_4_3_Core
 {
 	Q_OBJECT
 public:
