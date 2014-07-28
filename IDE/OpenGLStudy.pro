@@ -26,3 +26,7 @@ SOURCES += \
 	../src/Main.cpp \
 	../src/MainWindow.cpp \
 	../src/OpenGLWindow.cpp
+
+OTHER_FILES += \
+    ../Bin/Shaders/std_fragment.glsl \
+    ../Bin/Shaders/std_vertex.glsl

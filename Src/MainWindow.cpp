@@ -10,6 +10,8 @@
 
 void MainWindow::initialize()
 {
+	OpenGLWindow::initialize();
+
 	mProgram = new QOpenGLShaderProgram(this);
 	mProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/std_vertex.glsl");
 	mProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/std_fragment.glsl");
@@ -19,17 +21,16 @@ void MainWindow::initialize()
 
 void MainWindow::render()
 {
+	OpenGLWindow::render();
+
 	const qreal retinaScale = devicePixelRatio();
 	glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
 
-
-	glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-
 	mProgram->bind();
 
+	glPointSize(40.0f);
+	glDrawArrays(GL_POINTS, 0, 1);
 
 	mProgram->release();
 }
