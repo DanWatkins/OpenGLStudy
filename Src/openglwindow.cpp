@@ -1,19 +1,26 @@
+//==================================================================================================================|
+// Created 2013.07.26 by Daniel L. Watkins
+//
+// Copyright (C) 2013-2014 Daniel L. Watkins
+// This file is licensed under the MIT License.
+//==================================================================================================================|
+
 #include "OpenGLWindow.h"
 
 OpenGLWindow::OpenGLWindow(QWindow *parent)
-    : QWindow(parent),
-      mUpdatePending(false),
-      mAnimating(false),
-      mContext(0),
-      mDevice(0)
+	: QWindow(parent),
+	  mUpdatePending(false),
+	  mAnimating(false),
+	  mContext(0),
+	  mDevice(0)
 {
-    setSurfaceType(QWindow::OpenGLSurface);
+	setSurfaceType(QWindow::OpenGLSurface);
 }
 
 
 void OpenGLWindow::render(QPainter *painter)
 {
-    Q_UNUSED(painter);
+	Q_UNUSED(painter);
 }
 
 
@@ -24,92 +31,92 @@ void OpenGLWindow::initialize()
 
 void OpenGLWindow::render()
 {
-    if (!mDevice)
-        mDevice = new QOpenGLPaintDevice;
+	if (!mDevice)
+		mDevice = new QOpenGLPaintDevice;
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    mDevice->setSize(size());
+	mDevice->setSize(size());
 
-    QPainter painter(mDevice);
-    render(&painter);
+	QPainter painter(mDevice);
+	render(&painter);
 }
 
 
 void OpenGLWindow::renderLater()
 {
-    if (!mUpdatePending)
-    {
-        mUpdatePending = true;
-        QCoreApplication::postEvent(this, new QEvent(QEvent::UpdateRequest));
-    }
+	if (!mUpdatePending)
+	{
+		mUpdatePending = true;
+		QCoreApplication::postEvent(this, new QEvent(QEvent::UpdateRequest));
+	}
 }
 
 
 bool OpenGLWindow::event(QEvent *event)
 {
-    switch (event->type())
-    {
-        case QEvent::UpdateRequest:
-        {
-            mUpdatePending = false;
-            renderNow();
-            return true;
-        }
-        default:
-        {
-            return QWindow::event(event);
-        }
-    }
+	switch (event->type())
+	{
+		case QEvent::UpdateRequest:
+		{
+			mUpdatePending = false;
+			renderNow();
+			return true;
+		}
+		default:
+		{
+			return QWindow::event(event);
+		}
+	}
 }
 
 
 void OpenGLWindow::exposeEvent(QExposeEvent *event)
 {
-    Q_UNUSED(event);
+	Q_UNUSED(event);
 
-    if (isExposed())
-        renderNow();
+	if (isExposed())
+		renderNow();
 }
 
 
 void OpenGLWindow::renderNow()
 {
-    if (!isExposed())
-        return;
+	if (!isExposed())
+		return;
 
-    bool needsInitialize = false;
+	bool needsInitialize = false;
 
-    if (!mContext) {
-        mContext = new QOpenGLContext(this);
-        mContext->setFormat(requestedFormat());
-        mContext->create();
+	if (!mContext) {
+		mContext = new QOpenGLContext(this);
+		mContext->setFormat(requestedFormat());
+		mContext->create();
 
-        needsInitialize = true;
-    }
+		needsInitialize = true;
+	}
 
-    mContext->makeCurrent(this);
+	mContext->makeCurrent(this);
 
-    if (needsInitialize) {
-        initializeOpenGLFunctions();
-        initialize();
-    }
+	if (needsInitialize) {
+		initializeOpenGLFunctions();
+		initialize();
+	}
 
-    render();
+	render();
 
-    mContext->swapBuffers(this);
+	mContext->swapBuffers(this);
 
-    if (mAnimating)
-        renderLater();
+	if (mAnimating)
+		renderLater();
 }
 
 
 void OpenGLWindow::setAnimating(bool animating)
 {
-    mAnimating = animating;
+	mAnimating = animating;
 
-    if (animating)
-        renderLater();
+	if (animating)
+		renderLater();
 }
 
 

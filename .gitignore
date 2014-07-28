@@ -26,3 +26,7 @@ IDE/Obj/
 *.exe
 *.pdb
 *ilk
+Obj/
+Bin/OpenGLStudy.exe.embed.manifest
+Bin/OpenGLStudy.exe_manifest.rc
+Bin/OpenGLStudy.exe_manifest.res

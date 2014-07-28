@@ -1,37 +1,43 @@
+//==================================================================================================================|
+// Created 2013.07.26 by Daniel L. Watkins
+//
+// Copyright (C) 2013-2014 Daniel L. Watkins
+// This file is licensed under the MIT License.
+//==================================================================================================================|
+
 #ifndef OPENGLWINDOW_H
 #define OPENGLWINDOW_H
 
-#include <QMainWindow>
-#include <QtGui>
+#include "Main.h"
 
 class OpenGLWindow : public QWindow, protected QOpenGLFunctions
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit OpenGLWindow(QWindow *parent = 0);
+	explicit OpenGLWindow(QWindow *parent = 0);
 
-    virtual void render(QPainter *painter);
-    virtual void render();
+	virtual void render(QPainter *painter);
+	virtual void render();
 
-    virtual void initialize();
+	virtual void initialize();
 
-    void setAnimating(bool animating);
+	void setAnimating(bool animating);
 
 public slots:
-    void renderLater();
-    void renderNow();
+	void renderLater();
+	void renderNow();
 
 protected:
-    bool event(QEvent *event);
+	bool event(QEvent *event);
 
-    void exposeEvent(QExposeEvent *event);
+	void exposeEvent(QExposeEvent *event);
 
 private:
-    bool mUpdatePending;
-    bool mAnimating;
+	bool mUpdatePending;
+	bool mAnimating;
 
-    QOpenGLContext *mContext;
-    QOpenGLPaintDevice *mDevice;
+	QOpenGLContext *mContext;
+	QOpenGLPaintDevice *mDevice;
 };
 
 #endif // OPENGLWINDOW_H
