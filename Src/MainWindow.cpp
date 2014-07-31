@@ -6,6 +6,7 @@
 //==================================================================================================================|
 
 #include "MainWindow.h"
+#include "Object.h"
 
 void generateTexture(float *data, unsigned textureSize)
 {
@@ -27,6 +28,9 @@ void generateTexture(float *data, unsigned textureSize)
 void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
+
+	sb6::object obj;
+	obj.load("hey");
 
 	//load shaders
 	{

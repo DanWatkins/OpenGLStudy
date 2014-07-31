@@ -17,16 +17,19 @@ MOBILITY =
 
 DESTDIR = ../Bin/
 
-HEADERS += \
-	../src/Main.h \
-	../src/MainWindow.h \
-	../src/OpenGLWindow.h
-
-SOURCES += \
-	../src/Main.cpp \
-	../src/MainWindow.cpp \
-	../src/OpenGLWindow.cpp
 
 OTHER_FILES += \
     ../Bin/Shaders/std_fragment.glsl \
     ../Bin/Shaders/std_vertex.glsl
+
+HEADERS += \
+    ../src/Main.h \
+    ../src/MainWindow.h \
+    ../src/Object.h \
+    ../src/openglwindow.h
+
+SOURCES += \
+    ../src/Main.cpp \
+    ../src/MainWindow.cpp \
+    ../src/Object.cpp \
+    ../src/openglwindow.cpp
