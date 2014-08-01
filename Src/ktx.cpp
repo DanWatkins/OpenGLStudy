@@ -33,7 +33,7 @@
 
 #include <QOpenGLFunctions_4_3_Core>
 
-static QOpenGLFunctions_4_3_Core GL();
+QOpenGLFunctions_4_3_Core GL;
 
 namespace sb6
 {

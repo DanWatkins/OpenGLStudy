@@ -9,13 +9,13 @@
 #define TRIANGLETEST_H
 
 #include "OpenGLWindow.h"
+#include "Object.h"
 
 class MainWindow : public OpenGLWindow
 {
 public:
 	MainWindow()
-		: mProgram(0),
-		  mTexture(0)
+		: mProgram(0)
 	{
 	}
 
@@ -25,7 +25,20 @@ public:
 private:
 	QOpenGLShaderProgram *mProgram;
 
-	GLuint mTexture, mVao;
+	GLuint mTexObject[2];
+	GLuint mTexIndex;
+	sb6::object mObject;
+
+	struct
+	{
+		GLint mvMatrix;
+		GLint projMatrix;
+	} uniforms;
+
+
+	void initShaders();
+	void initTextures();
 };
+
 
 #endif

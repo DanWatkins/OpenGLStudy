@@ -6,22 +6,72 @@
 //==================================================================================================================|
 
 #include "MainWindow.h"
-#include "Object.h"
+#include "ktx.h"
 
-void generateTexture(float *data, unsigned textureSize)
+#define B 0x00, 0x00, 0x00, 0x00
+#define W 0xFF, 0xFF, 0xFF, 0xFF
+static const GLubyte tex_data[] =
 {
-	unsigned x, y;
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
+	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
+};
 
-	for (y = 0; y < textureSize; y++)
-	{
-		for (x = 0; x < textureSize; x++)
-		{
-			data[(y * textureSize + x) * 4 + 0] = (float)((x & y) & 0xFF) / 63.0f;
-			data[(y * textureSize + x) * 4 + 1] = (float)((x | y) & 0xFF) / 255.0f;
-			data[(y * textureSize + x) * 4 + 2] = (float)((x ^ y) & 0xFF) / 127.0f;
-			data[(y * textureSize + x) * 4 + 3] = 1.0f;
-		}
-	}
+static const unsigned texSize = 16;
+#undef B
+#undef W
+
+
+void MainWindow::initShaders()
+{
+	mProgram = new QOpenGLShaderProgram(this);
+	mProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/std_vertex.glsl");
+	mProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/std_fragment.glsl");
+
+	if (mProgram->link() == false)
+		std::cout << "Problem linking shaders" << std::endl;
+
+	uniforms.mvMatrix = mProgram->uniformLocation("mv_matrix");
+	uniforms.projMatrix = mProgram->uniformLocation("proj_matrix");
+
+	std::cout << "Initialized shaders" << std::endl;
+}
+
+
+void MainWindow::initTextures()
+{
+	glGenTextures(1, &mTexObject[0]);
+	glBindTexture(GL_TEXTURE_2D, mTexObject[0]);
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, texSize, texSize);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texSize, texSize, GL_RGBA, GL_UNSIGNED_BYTE, tex_data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	std::cout << "Loading... KTX" << std::endl;
+
+	mTexObject[1] = sb6::ktx::file::load("Textures/pattern1.ktx");
+
+	std::cout << "Loading... SBM" << std::endl;
+
+	mObject.load("Objects/torus_nrms_tc.sbm");
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	std::cout << "Initialized texutres" << std::endl;
 }
 
 
@@ -29,37 +79,8 @@ void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
 
-	sb6::object obj;
-	obj.load("hey");
-
-	//load shaders
-	{
-		mProgram = new QOpenGLShaderProgram(this);
-		mProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/std_vertex.glsl");
-		mProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/std_fragment.glsl");
-
-		if (mProgram->link() == false)
-			std::cout << "Problem linking shaders" << std::endl;
-	}
-
-	//load texture
-	{
-		const unsigned TEXTURE_SIZE = 256;
-
-		//reserve space
-		glGenTextures(1, &mTexture);
-		glBindTexture(GL_TEXTURE_2D, mTexture);
-		glTexStorage2D(GL_TEXTURE_2D, 8, GL_RGBA32F, 256, 256);
-
-		//generate and upload texture data
-		float *data = new float[TEXTURE_SIZE * TEXTURE_SIZE * sizeof(float)];
-		generateTexture(data, TEXTURE_SIZE);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE, GL_RGBA, GL_FLOAT, data);
-		delete [] data;
-	}
-
-	glGenVertexArrays(1, &mVao);
-	glBindVertexArray(mVao);
+	initShaders();
+	initTextures();
 }
 
 
@@ -67,13 +88,25 @@ void MainWindow::render()
 {
 	OpenGLWindow::render();
 
+	static const GLfloat ones[] = { 1.0f };
+	glClearBufferfv(GL_DEPTH, 0, ones);
+
 	const qreal retinaScale = devicePixelRatio();
 	glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
 
 	mProgram->bind();
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindTexture(GL_TEXTURE_2D, mTexObject[mTexIndex]);
+
+	QMatrix4x4 mv;
+	mProgram->setUniformValue(uniforms.mvMatrix, mv);
+
+	QMatrix4x4 proj;
+	proj.perspective(60.0f, (float)QWindow::width() / (float)QWindow::height(), 0.1f, 1000.0f);
+	mProgram->setUniformValue(uniforms.projMatrix, proj);
+
+	mObject.render();
 
 	mProgram->release();
 }

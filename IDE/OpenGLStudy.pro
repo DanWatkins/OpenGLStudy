@@ -26,10 +26,12 @@ HEADERS += \
     ../src/Main.h \
     ../src/MainWindow.h \
     ../src/Object.h \
-    ../src/openglwindow.h
+	../src/openglwindow.h \
+	../src/KTX.h
 
 SOURCES += \
     ../src/Main.cpp \
     ../src/MainWindow.cpp \
     ../src/Object.cpp \
-    ../src/openglwindow.cpp
+	../src/openglwindow.cpp \
+	../src/KTX.cpp
