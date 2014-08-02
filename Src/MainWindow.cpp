@@ -68,9 +68,6 @@ void MainWindow::initTextures()
 
 	mObject.load("Objects/torus_nrms_tc.sbm");
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
 	std::cout << "Initialized texutres" << std::endl;
 }
 
@@ -79,8 +76,8 @@ void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
 
-	initShaders();
 	initTextures();
+	initShaders();
 }
 
 
@@ -88,23 +85,34 @@ void MainWindow::render()
 {
 	OpenGLWindow::render();
 
+	static const GLfloat gray[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	static const GLfloat ones[] = { 1.0f };
+	glClearBufferfv(GL_COLOR, 0, gray);
 	glClearBufferfv(GL_DEPTH, 0, ones);
 
 	const qreal retinaScale = devicePixelRatio();
 	glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
 	mProgram->bind();
 
 	glBindTexture(GL_TEXTURE_2D, mTexObject[mTexIndex]);
+	static double time = 0.0;
+	time += 0.01;
 
-	QMatrix4x4 mv;
-	mProgram->setUniformValue(uniforms.mvMatrix, mv);
+	{
+		QMatrix4x4 mv;
+		mv.translate(0.0f, 0.0f, -3.0f);
+		mv.rotate((float)time * 19.3f, 0.0f, 1.0f, 0.0f);
+		mv.rotate((float)time * 21.1f, 0.0f, 0.0f, 1.0f);
+		mProgram->setUniformValue(uniforms.mvMatrix, mv);
 
-	QMatrix4x4 proj;
-	proj.perspective(60.0f, (float)QWindow::width() / (float)QWindow::height(), 0.1f, 1000.0f);
-	mProgram->setUniformValue(uniforms.projMatrix, proj);
+		QMatrix4x4 proj;
+		proj.perspective(60.0f, (float)QWindow::width() / (float)QWindow::height(), 0.1f, 1000.0f);
+		mProgram->setUniformValue(uniforms.projMatrix, proj);
+	}
 
 	mObject.render();
 
