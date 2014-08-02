@@ -62,7 +62,7 @@ void MainWindow::initTextures()
 
 	std::cout << "Loading... KTX" << std::endl;
 
-	mTexObject[1] = sb6::ktx::file::load("Textures/pattern1.ktx");
+	mTexObject[1] = sb6::ktx::File::load("Textures/pattern1.ktx");
 
 	std::cout << "Loading... SBM" << std::endl;
 

@@ -45,6 +45,8 @@ object::~object()
 
 void object::load(const char * filename)
 {
+	initializeOpenGLFunctions();
+
 	FILE * infile = fopen(filename, "rb");
 	size_t filesize;
 	char * data;
