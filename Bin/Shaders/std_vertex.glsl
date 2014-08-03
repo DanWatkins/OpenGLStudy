@@ -1,17 +1,16 @@
 #version 430 core
 
-out VS_OUT
-{
-	vec2 textureCoordinate;
-} vs_out;
+uniform vec2 offset;
 
-uniform mat4 mvp;
-uniform float offset;
+out vec2 textureCoordinate;
 
 void main()
 {
-	const vec2[4] position = vec2[4](vec2(-0.5, -0.5), vec2( 0.5, -0.5), vec2(-0.5,  0.5), vec2( 0.5,  0.5));
+	const vec4 vertices[] = vec4[](vec4(-.45, -.45, .5, 1.0),
+									vec4(.45, -.45, .5, 1.0),
+									vec4(-.45, .45, .5, 1.0),
+									vec4(.45, .45, .5, 1.0));
 
-	vs_out.textureCoordinate = (position[gl_VertexID].xy + vec2(offset, .5)) * vec2(30.0, 1.0);
-	gl_Position = mvp * vec4(position[gl_VertexID], 0.0, 1.0);
+	gl_Position = vertices[gl_VertexID] + vec4(offset, 0.0, 0.0);
+	textureCoordinate = vertices[gl_VertexID].xy * 3.0 + vec2(.45 * 3.0);
 }

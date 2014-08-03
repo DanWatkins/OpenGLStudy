@@ -25,23 +25,12 @@ public:
 private:
 	QOpenGLShaderProgram *mProgram;
 	GLuint mVao;
+	GLuint mTexture;
 
-	struct
-	{
-		GLint mvp;
-		GLint offset;
-	} uniforms;
-
-	GLuint mTextures[3];
-	static const GLuint TextureWall = 0;
-	static const GLuint TextureCeiling = 1;
-	static const GLuint TextureFloor = 2;
 
 
 	void initShaders();
 	void initTextures();
-
-	void renderTunnel();
 };
 
 

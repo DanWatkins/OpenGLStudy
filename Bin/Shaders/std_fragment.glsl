@@ -1,15 +1,11 @@
 #version 430 core
 
-layout (location = 0) out vec4 color;
+uniform sampler2D sampler;
 
-in VS_OUT
-{
-	vec2 textureCoordinate;
-} fs_in;
-
-layout (binding = 0) uniform sampler2D tex;
+out vec4 color;
+in vec2 textureCoordinate;
 
 void main()
 {
-	color = texture(tex, fs_in.textureCoordinate);
+	color = texture(sampler, textureCoordinate);
 }

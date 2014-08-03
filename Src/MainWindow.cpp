@@ -18,30 +18,18 @@ void MainWindow::initShaders()
 	if (mProgram->link() == false)
 		std::cout << "Problem linking shaders" << std::endl;
 
-	uniforms.mvp = mProgram->uniformLocation("mvp");
-	uniforms.offset = mProgram->uniformLocation("offset");
-
 	std::cout << "Initialized shaders" << std::endl;
 }
 
 
 void MainWindow::initTextures()
 {
+	glGenTextures(1, &mTexture);
+	sb6::ktx::File::load("Textures/rightarrows.ktx", mTexture);
+	glBindTexture(GL_TEXTURE_2D, mTexture);
+
 	glGenVertexArrays(1, &mVao);
 	glBindVertexArray(mVao);
-
-	mTextures[TextureWall] = sb6::ktx::File::load("Textures/brick.ktx");
-	mTextures[TextureCeiling] = sb6::ktx::File::load("Textures/ceiling.ktx");
-	mTextures[TextureFloor] = sb6::ktx::File::load("Textures/floor.ktx");
-
-	for (int n=0; n<3; ++n)
-	{
-		glBindTexture(GL_TEXTURE_2D, mTextures[n]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-
-	glBindVertexArray(0);
 }
 
 
@@ -50,7 +38,6 @@ void MainWindow::initialize()
 	OpenGLWindow::initialize();
 
 	initShaders();
-
 	initTextures();
 }
 
@@ -67,41 +54,25 @@ void MainWindow::render()
 	const qreal retinaScale = devicePixelRatio();
 	glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
 	mProgram->bind();
 	{
-		renderTunnel();
+		static const GLfloat yellow[] = { 0.4f, 0.4f, 0.0f, 1.0f };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, yellow);
+
+		static const GLenum wrapmodes[] = { GL_CLAMP_TO_EDGE, GL_REPEAT, GL_CLAMP_TO_BORDER, GL_MIRRORED_REPEAT };
+		static const float offsets[] = { -0.5f, -0.5f,
+												  0.5f, -0.5f,
+												 -0.5f,  0.5f,
+												  0.5f,  0.5f };
+
+		for (int i=0; i<4; i++)
+		{
+			mProgram->setUniformValue(0, offsets[i*2]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapmodes[i]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapmodes[i]);
+
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		}
 	}
 	mProgram->release();
-}
-
-
-void MainWindow::renderTunnel()
-{
-	glBindVertexArray(mVao);
-
-	static float offset = 0.0f;
-	offset += 0.0001f;
-	mProgram->setUniformValue(uniforms.offset, offset);
-
-	QMatrix4x4 matProjection;
-	matProjection.perspective(60.0f, (float)width() / (float)height(), 0.1f, 100.0f);
-
-	GLuint sceneTextures[] = { TextureWall, TextureFloor, TextureWall, TextureCeiling };
-	for (int n=0; n<4; n++)
-	{
-		QMatrix4x4 matMV;
-		matMV.rotate(90.0f * (float)n, QVector3D(0.0f, 0.0f, 1.0f));
-		matMV.translate(-0.5f, 0.0f, -10.0f);
-		matMV.rotate(90.0f, 0.0f, 1.0f, 0.0f);
-		matMV.scale(30.0f, 1.0f, 1.0f);
-
-		QMatrix4x4 matMVP = matProjection * matMV;
-		mProgram->setUniformValue(uniforms.mvp, matMVP);
-
-		glBindTexture(GL_TEXTURE_2D, mTextures[sceneTextures[n]]);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	}
 }
