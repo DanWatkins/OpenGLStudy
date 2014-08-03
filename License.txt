@@ -2,4 +2,4 @@ This software distribution contains source code from external sources. All sourc
 files under the directory ./Ext/ are licensed individually.
 
 All source code under the directory ./Src/ is licensed under the MIT license found in  
-"./Doc/Mit License.txt"
+"./Doc/Mit License.txt" unless otherwise noted.

@@ -1,21 +1,17 @@
-#version 420
-
-uniform mat4 mv_matrix;
-uniform mat4 proj_matrix;
-
-layout (location = 0) in vec4 position;
-layout (location = 4) in vec2 textureCoordinate;
-
+#version 430 core
 
 out VS_OUT
 {
-	vec2 tc;
+	vec2 textureCoordinate;
 } vs_out;
+
+uniform mat4 mvp;
+uniform float offset;
 
 void main()
 {
-	vec4 pos_vs = mv_matrix * position;
-	vs_out.tc = textureCoordinate;
+	const vec2[4] position = vec2[4](vec2(-0.5, -0.5), vec2( 0.5, -0.5), vec2(-0.5,  0.5), vec2( 0.5,  0.5));
 
-	gl_Position = proj_matrix * pos_vs;
+	vs_out.textureCoordinate = (position[gl_VertexID].xy + vec2(offset, .5)) * vec2(30.0, 1.0);
+	gl_Position = mvp * vec4(position[gl_VertexID], 0.0, 1.0);
 }

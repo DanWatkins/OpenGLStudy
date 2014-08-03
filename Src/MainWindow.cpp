@@ -8,32 +8,6 @@
 #include "MainWindow.h"
 #include "ktx.h"
 
-#define B 0x00, 0x00, 0x00, 0x00
-#define W 0xFF, 0xFF, 0xFF, 0xFF
-static const GLubyte tex_data[] =
-{
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-	B, W, B, W, B, W, B, W, B, W, B, W, B, W, B, W,
-	W, B, W, B, W, B, W, B, W, B, W, B, W, B, W, B,
-};
-
-static const unsigned texSize = 16;
-#undef B
-#undef W
-
 
 void MainWindow::initShaders()
 {
@@ -44,8 +18,8 @@ void MainWindow::initShaders()
 	if (mProgram->link() == false)
 		std::cout << "Problem linking shaders" << std::endl;
 
-	uniforms.mvMatrix = mProgram->uniformLocation("mv_matrix");
-	uniforms.projMatrix = mProgram->uniformLocation("proj_matrix");
+	uniforms.mvp = mProgram->uniformLocation("mvp");
+	uniforms.offset = mProgram->uniformLocation("offset");
 
 	std::cout << "Initialized shaders" << std::endl;
 }
@@ -53,22 +27,21 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-	glGenTextures(1, &mTexObject[0]);
-	glBindTexture(GL_TEXTURE_2D, mTexObject[0]);
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, texSize, texSize);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texSize, texSize, GL_RGBA, GL_UNSIGNED_BYTE, tex_data);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glGenVertexArrays(1, &mVao);
+	glBindVertexArray(mVao);
 
-	std::cout << "Loading... KTX" << std::endl;
+	mTextures[TextureWall] = sb6::ktx::File::load("Textures/brick.ktx");
+	mTextures[TextureCeiling] = sb6::ktx::File::load("Textures/ceiling.ktx");
+	mTextures[TextureFloor] = sb6::ktx::File::load("Textures/floor.ktx");
 
-	mTexObject[1] = sb6::ktx::File::load("Textures/pattern1.ktx");
+	for (int n=0; n<3; ++n)
+	{
+		glBindTexture(GL_TEXTURE_2D, mTextures[n]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
 
-	std::cout << "Loading... SBM" << std::endl;
-
-	mObject.load("Objects/torus_nrms_tc.sbm");
-
-	std::cout << "Initialized texutres" << std::endl;
+	glBindVertexArray(0);
 }
 
 
@@ -76,8 +49,9 @@ void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
 
-	initTextures();
 	initShaders();
+
+	initTextures();
 }
 
 
@@ -85,9 +59,9 @@ void MainWindow::render()
 {
 	OpenGLWindow::render();
 
-	static const GLfloat gray[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	static const GLfloat color[] = { 0.0f, 0.0f, 0.1f, 1.0f };
 	static const GLfloat ones[] = { 1.0f };
-	glClearBufferfv(GL_COLOR, 0, gray);
+	glClearBufferfv(GL_COLOR, 0, color);
 	glClearBufferfv(GL_DEPTH, 0, ones);
 
 	const qreal retinaScale = devicePixelRatio();
@@ -97,24 +71,37 @@ void MainWindow::render()
 	glDepthFunc(GL_LEQUAL);
 
 	mProgram->bind();
-
-	glBindTexture(GL_TEXTURE_2D, mTexObject[mTexIndex]);
-	static double time = 0.0;
-	time += 0.01;
-
 	{
-		QMatrix4x4 mv;
-		mv.translate(0.0f, 0.0f, -3.0f);
-		mv.rotate((float)time * 19.3f, 0.0f, 1.0f, 0.0f);
-		mv.rotate((float)time * 21.1f, 0.0f, 0.0f, 1.0f);
-		mProgram->setUniformValue(uniforms.mvMatrix, mv);
-
-		QMatrix4x4 proj;
-		proj.perspective(60.0f, (float)QWindow::width() / (float)QWindow::height(), 0.1f, 1000.0f);
-		mProgram->setUniformValue(uniforms.projMatrix, proj);
+		renderTunnel();
 	}
-
-	mObject.render();
-
 	mProgram->release();
+}
+
+
+void MainWindow::renderTunnel()
+{
+	glBindVertexArray(mVao);
+
+	static float offset = 0.0f;
+	offset += 0.0001f;
+	mProgram->setUniformValue(uniforms.offset, offset);
+
+	QMatrix4x4 matProjection;
+	matProjection.perspective(60.0f, (float)width() / (float)height(), 0.1f, 100.0f);
+
+	GLuint sceneTextures[] = { TextureWall, TextureFloor, TextureWall, TextureCeiling };
+	for (int n=0; n<4; n++)
+	{
+		QMatrix4x4 matMV;
+		matMV.rotate(90.0f * (float)n, QVector3D(0.0f, 0.0f, 1.0f));
+		matMV.translate(-0.5f, 0.0f, -10.0f);
+		matMV.rotate(90.0f, 0.0f, 1.0f, 0.0f);
+		matMV.scale(30.0f, 1.0f, 1.0f);
+
+		QMatrix4x4 matMVP = matProjection * matMV;
+		mProgram->setUniformValue(uniforms.mvp, matMVP);
+
+		glBindTexture(GL_TEXTURE_2D, mTextures[sceneTextures[n]]);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	}
 }

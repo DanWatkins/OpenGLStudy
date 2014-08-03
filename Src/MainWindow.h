@@ -24,20 +24,24 @@ public:
 
 private:
 	QOpenGLShaderProgram *mProgram;
-
-	GLuint mTexObject[2];
-	GLuint mTexIndex;
-	sb6::object mObject;
+	GLuint mVao;
 
 	struct
 	{
-		GLint mvMatrix;
-		GLint projMatrix;
+		GLint mvp;
+		GLint offset;
 	} uniforms;
+
+	GLuint mTextures[3];
+	static const GLuint TextureWall = 0;
+	static const GLuint TextureCeiling = 1;
+	static const GLuint TextureFloor = 2;
 
 
 	void initShaders();
 	void initTextures();
+
+	void renderTunnel();
 };
 
 
