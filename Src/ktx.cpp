@@ -1,3 +1,6 @@
+//NOTICE: This file has been moddified from its original form as distributed
+//with the OpenGL SuperBible 6th edition source code examples
+
 /*
  * Copyright © 2012-2013 Graham Sellers
  *

@@ -25,9 +25,14 @@ public:
 private:
 	QOpenGLShaderProgram *mProgram;
 	GLuint mVao;
-	GLuint mTexture;
+	GLuint mBuffer;
 
+	GLuint mTexGrassColor, mTexGrassLength, mTexGrassOrientation, mTexGrassgBend;
 
+	struct
+	{
+		GLint mvpMatrix;
+	} uniforms;
 
 	void initShaders();
 	void initTextures();
