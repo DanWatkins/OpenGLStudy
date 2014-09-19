@@ -45,8 +45,10 @@ void MainWindow::initTextures()
 	glActiveTexture(GL_TEXTURE4);
 	mTexGrassgBend = sb6::ktx::File::load("Textures/grass_bend.ktx");
 
-	glGenVertexArrays(1, &mVao);
-	glBindVertexArray(mVao);
+	if (mTexGrassColor == 0 || mTexGrassgBend == 0 || mTexGrassLength == 0 || mTexGrassOrientation == 0)
+	{
+		std::cout << "Error loading textures" << std::endl;
+	}
 }
 
 
@@ -57,6 +59,9 @@ void MainWindow::initialize()
 	glGenBuffers(1, &mBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(grass_blade), grass_blade, GL_STATIC_DRAW);
+
+	glGenVertexArrays(1, &mVao);
+	glBindVertexArray(mVao);
 
 	glGenVertexArrays(1, &mVao);
 	glBindVertexArray(mVao);
@@ -73,7 +78,7 @@ void MainWindow::render()
 {
 	OpenGLWindow::render();
 
-	static const GLfloat color[] = { 0.0f, 0.0f, 0.1f, 1.0f };
+	static const GLfloat color[] = { 0.95f, 0.95f, 0.95f, 1.0f };
 	static const GLfloat ones[] = { 1.0f };
 	glClearBufferfv(GL_COLOR, 0, color);
 	glClearBufferfv(GL_DEPTH, 0, ones);
