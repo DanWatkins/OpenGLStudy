@@ -9,11 +9,10 @@
 #define OPENGLWINDOW_H
 
 #include "Main.h"
-#include <QOpenGLFunctions_4_3_Core>
+#include <QtGui\QOpenGLFunctions_4_3_Core>
 
 class OpenGLWindow : public QWindow, protected QOpenGLFunctions_4_3_Core
 {
-	Q_OBJECT
 public:
 	explicit OpenGLWindow(QWindow *parent = 0);
 
@@ -41,4 +40,4 @@ private:
 	QOpenGLPaintDevice *mDevice;
 };
 
-#endif // OPENGLWINDOW_H
+#endif

@@ -25,16 +25,11 @@
  */
 
 #include "ktx.h"
-
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS 1
-#endif /* _MSC_VER */
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
-#include <QOpenGLFunctions_4_3_Core>
+#include <QtGui\QOpenGLFunctions_4_3_Core>
 
 static const unsigned char identifier[] =
 {

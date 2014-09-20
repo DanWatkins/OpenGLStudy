@@ -5,8 +5,19 @@
 // This file is licensed under the MIT License.
 //==================================================================================================================|
 
-#include <QApplication>
+#include <QtWidgets\QApplication>
 #include "MainWindow.h"
+
+#if _MSC_VER >= 1310
+	#ifdef _DEBUG
+		#pragma comment (lib, "Qt5Guid.lib")
+		#pragma comment (lib, "Qt5Cored.lib")
+	#else
+		#pragma comment (lib, "Qt5Gui.lib")
+		#pragma comment (lib, "Qt5Core.lib")
+	#endif
+#endif
+
 
 int main(int argc, char *argv[])
 {

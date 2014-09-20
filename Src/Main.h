@@ -8,8 +8,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <QMainWindow>
-#include <QtGui>
+#include <QtWidgets\QMainWindow>
+#include <QtGui/QtGui>
 
 #include <iostream>
 #include <string>

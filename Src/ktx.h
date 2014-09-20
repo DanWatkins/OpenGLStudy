@@ -2,7 +2,7 @@
 #ifndef KTX_H
 #define KTX_H
 
-#include <QOpenGLFunctions_4_3_Core>
+#include <QtGui\QOpenGLFunctions_4_3_Core>
 
 namespace sb6
 {

@@ -28,7 +28,7 @@
 #define __OBJECT_H__
 
 #include "sb6mfile.h"
-#include <QOpenGLFunctions_4_3_Core>
+#include <QtGui\QOpenGLFunctions_4_3_Core>
 
 #ifndef SB6M_FILETYPES_ONLY
 
