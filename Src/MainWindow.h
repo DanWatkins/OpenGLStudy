@@ -15,7 +15,7 @@ class MainWindow : public OpenGLWindow
 {
 public:
 	MainWindow()
-		: mProgram(0)
+		: mProgram(this)
 	{
 	}
 
@@ -23,9 +23,9 @@ public:
 	void render();
 
 private:
-	QOpenGLShaderProgram *mProgram;
-	GLuint mVao;
-	GLuint mBuffer;
+	QOpenGLShaderProgram mProgram;
+	QOpenGLVertexArrayObject mVao;
+	QOpenGLBuffer mBuffer;
 
 	GLuint mTexGrassColor, mTexGrassLength, mTexGrassOrientation, mTexGrassgBend;
 

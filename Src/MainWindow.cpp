@@ -21,11 +21,10 @@ static const GLfloat grass_blade[] =
 
 void MainWindow::initShaders()
 {
-	mProgram = new QOpenGLShaderProgram(this);
-	mProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/std_vertex.glsl");
-	mProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/std_fragment.glsl");
+	mProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/std_vertex.glsl");
+	mProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/std_fragment.glsl");
 
-	if (mProgram->link() == false)
+	if (mProgram.link() == false)
 		std::cout << "Problem linking shaders" << std::endl;
 
 	std::cout << "Initialized shaders" << std::endl;
@@ -34,7 +33,7 @@ void MainWindow::initShaders()
 
 void MainWindow::initTextures()
 {
-	uniforms.mvpMatrix = mProgram->uniformLocation("mvpMatrix");
+	uniforms.mvpMatrix = mProgram.uniformLocation("mvpMatrix");
 
 	glActiveTexture(GL_TEXTURE1);
 	mTexGrassLength = sb6::ktx::File::load("Textures/grass_length.ktx");
@@ -56,21 +55,20 @@ void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
 
-	glGenBuffers(1, &mBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(grass_blade), grass_blade, GL_STATIC_DRAW);
+	mVao.bind();
+	{
+		mBuffer = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+		mBuffer.create();
+		mBuffer.bind();
+		mBuffer.allocate(grass_blade, sizeof(grass_blade));
 
-	glGenVertexArrays(1, &mVao);
-	glBindVertexArray(mVao);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(0);
 
-	glGenVertexArrays(1, &mVao);
-	glBindVertexArray(mVao);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-	glEnableVertexAttribArray(0);
-
-	initShaders();
-	initTextures();
+		initShaders();
+		initTextures();
+	}
+	mVao.release();
 }
 
 
@@ -90,7 +88,7 @@ void MainWindow::render()
 	float t = (float)currentTime * 0.02f;
 	float r = 550.0f;
 
-	mProgram->bind();
+	mProgram.bind();
 	{
 		QMatrix4x4 mvMatrix;
 		mvMatrix.lookAt(QVector3D(sinf(t) * r, 25.0f, cosf(t) * r),
@@ -99,13 +97,16 @@ void MainWindow::render()
 		QMatrix4x4 projMatrix;
 		projMatrix.perspective(45.0f, (float)this->width() / (float)this->height(), 0.1f, 1000.0f);
 
-		mProgram->setUniformValue(uniforms.mvpMatrix, projMatrix*mvMatrix);
+		mProgram.setUniformValue(uniforms.mvpMatrix, projMatrix*mvMatrix);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		glBindVertexArray(mVao);
-		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, 1024*1024);
+		mVao.bind();
+		{
+			const int count = 1024*1024*8;
+			glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, count);
+		}
 	}
-	mProgram->release();
+	mProgram.release();
 }
