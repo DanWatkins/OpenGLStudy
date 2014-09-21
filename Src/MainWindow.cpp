@@ -56,7 +56,7 @@ void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
 
-	mVao.bind();
+	Bind(mVao,
 	{
 		mBuffer = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
 		mBuffer.create();
@@ -70,8 +70,7 @@ void MainWindow::initialize()
 		mProgram.setAttributeBuffer(0, GL_FLOAT, 0, 2);
 
 		initTextures();
-	}
-	mVao.release();
+	})
 }
 
 
@@ -87,10 +86,7 @@ void MainWindow::render()
 	const qreal retinaScale = devicePixelRatio();
 	glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
-	
-
-	//BIND(mProgram,
-	mProgram.bind();
+	Bind(mProgram,
 	{
 		float currentTime = 3.0;
 		float t = (float)currentTime * 0.02f;
@@ -108,13 +104,10 @@ void MainWindow::render()
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		mVao.bind();
+		Bind(mVao,
 		{
-			const int count = 1024*1024*8;
+			const int count = 1024*1024;
 			glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, count);
-		}
-		mVao.release();
-	}//)
-	mProgram.release();
-
+		})
+	})
 }

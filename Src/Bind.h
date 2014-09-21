@@ -9,35 +9,33 @@
 #define BIND_H
 
 #include <QtGui/qopenglshaderprogram.h>
-#include <functional>
 
-class Bind
+template<typename T>
+class _AutoBind
 {
 public:
 	template<typename W>
-	Bind(QOpenGLShaderProgram &program, W &&body)
+	_AutoBind(T &program, W &&body)
 	{
 		boundItem = &program;
 		boundItem->bind();
-
 		body();
 	}
 
 
-	~Bind()
+	~_AutoBind()
 	{
 		boundItem->release();
 	}
 
 
 private:
-	QOpenGLShaderProgram *boundItem;
+	_AutoBind() {}
+
+	T *boundItem;
 };
 
 
-//#define BIND(what) Bind(what, []() -> void
-
-
-#define BIND(what, body) Bind(what, [this]() -> void body);
+#define Bind(what, body) _AutoBind<decltype(what)>(what, [this]() -> void body);
 
 #endif

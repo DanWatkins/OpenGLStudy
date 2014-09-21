@@ -101,6 +101,7 @@
     <ClInclude Include="..\Src\Object.h" />
     <ClInclude Include="..\Src\OpenGLWindow.h" />
     <ClInclude Include="..\Src\sb6mfile.h" />
+    <ClInclude Include="..\Src\TypeOf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
