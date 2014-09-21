@@ -35,7 +35,6 @@ private:
 	} uniforms;
 
 	void initShaders();
-	void initTextures();
 };
 
 

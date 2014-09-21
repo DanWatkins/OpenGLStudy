@@ -9,14 +9,28 @@
 #include "ktx.h"
 #include "Bind.h"
 
-static const GLfloat grass_blade[] =
+static const GLfloat square_vertices[] =
 {
-	-0.3f, 0.0f,
-	 0.3f, 0.0f,
-	-0.20f, 1.0f,
-	 0.1f, 1.3f,
-	-0.05f, 2.3f,
-	 0.0f, 3.3f
+    -1.0f, -1.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 0.0f, 1.0f,
+        1.0f,  1.0f, 0.0f, 1.0f,
+    -1.0f,  1.0f, 0.0f, 1.0f
+};
+
+static const GLfloat instance_colors[] =
+{
+    1.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 1.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f
+};
+
+static const GLfloat instance_positions[] =
+{
+    -2.0f, -2.0f, 0.0f, 0.0f,
+        2.0f, -2.0f, 0.0f, 0.0f,
+        2.0f,  2.0f, 0.0f, 0.0f,
+    -2.0f,  2.0f, 0.0f, 0.0f
 };
 
 
@@ -32,44 +46,35 @@ void MainWindow::initShaders()
 }
 
 
-void MainWindow::initTextures()
-{
-	uniforms.mvpMatrix = mProgram.uniformLocation("mvpMatrix");
-
-	glActiveTexture(GL_TEXTURE1);
-	mTexGrassLength = sb6::ktx::File::load("Textures/grass_length.ktx");
-	glActiveTexture(GL_TEXTURE2);
-	mTexGrassOrientation = sb6::ktx::File::load("Textures/grass_orientation.ktx");
-	glActiveTexture(GL_TEXTURE3);
-	mTexGrassColor = sb6::ktx::File::load("Textures/grass_color.ktx");
-	glActiveTexture(GL_TEXTURE4);
-	mTexGrassgBend = sb6::ktx::File::load("Textures/grass_bend.ktx");
-
-	if (mTexGrassColor == 0 || mTexGrassgBend == 0 || mTexGrassLength == 0 || mTexGrassOrientation == 0)
-	{
-		std::cout << "Error loading textures" << std::endl;
-	}
-}
-
 
 void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
 
+	mVao.create();
 	Bind(mVao,
 	{
+		
 		mBuffer = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
 		mBuffer.create();
 		mBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
 		mBuffer.bind();
-		mBuffer.allocate(grass_blade, sizeof(grass_blade));
-		
+		mBuffer.allocate(sizeof(square_vertices) + sizeof(instance_colors) + sizeof(instance_positions));
+		mBuffer.write(0, square_vertices, sizeof(square_vertices));
+		mBuffer.write(sizeof(square_vertices), instance_colors, sizeof(instance_colors));
+		mBuffer.write(sizeof(square_vertices)+sizeof(instance_colors), instance_positions, sizeof(instance_positions));
+
 		initShaders();
 
 		mProgram.enableAttributeArray(0);
-		mProgram.setAttributeBuffer(0, GL_FLOAT, 0, 2);
+		mProgram.enableAttributeArray(1);
+		mProgram.enableAttributeArray(2);
+		mProgram.setAttributeBuffer(0, GL_FLOAT, 0, 4);
+		mProgram.setAttributeBuffer(1, GL_FLOAT, sizeof(square_vertices), 4);
+		mProgram.setAttributeBuffer(2, GL_FLOAT, sizeof(square_vertices)+sizeof(instance_colors), 4);
 
-		initTextures();
+		glVertexAttribDivisor(1, 1);
+		glVertexAttribDivisor(2, 1);
 	})
 }
 
@@ -88,26 +93,9 @@ void MainWindow::render()
 
 	Bind(mProgram,
 	{
-		float currentTime = 3.0;
-		float t = (float)currentTime * 0.02f;
-		float r = 550.0f;
-
-		QMatrix4x4 mvMatrix;
-		mvMatrix.lookAt(QVector3D(sinf(t) * r, 25.0f, cosf(t) * r),
-												 QVector3D(0.0f, -50.0f, 0.0f),
-												 QVector3D(0.0f, 1.0f, 0.0));
-		QMatrix4x4 projMatrix;
-		projMatrix.perspective(45.0f, (float)this->width() / (float)this->height(), 0.1f, 1000.0f);
-
-		mProgram.setUniformValue(uniforms.mvpMatrix, projMatrix*mvMatrix);
-
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-
 		Bind(mVao,
 		{
-			const int count = 1024*1024;
-			glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, count);
+			glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, 4);
 		})
 	})
 }
