@@ -14,12 +14,10 @@ template<typename T>
 class _AutoBind
 {
 public:
-	template<typename W>
-	_AutoBind(T &program, W &&body)
+	_AutoBind(T &program)
 	{
 		boundItem = &program;
 		boundItem->bind();
-		body();
 	}
 
 
@@ -36,6 +34,6 @@ private:
 };
 
 
-#define Bind(what, body) _AutoBind<decltype(what)>(what, [this]() -> void body);
+#define Bind(what, body) { _AutoBind<decltype(what)> _bound(what); body }
 
 #endif
