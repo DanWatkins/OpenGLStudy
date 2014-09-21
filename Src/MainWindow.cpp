@@ -99,3 +99,12 @@ void MainWindow::render()
 		})
 	})
 }
+
+
+void MainWindow::keyPressEvent(QKeyEvent *ev)
+{
+	if (ev->key() == Qt::Key_Escape)
+	{
+		QWindow::close();
+	}
+}

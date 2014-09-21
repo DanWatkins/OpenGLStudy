@@ -29,6 +29,9 @@ private:
 
 	GLuint mTexGrassColor, mTexGrassLength, mTexGrassOrientation, mTexGrassgBend;
 
+
+	void keyPressEvent(QKeyEvent *ev);
+
 	struct
 	{
 		GLint mvpMatrix;
