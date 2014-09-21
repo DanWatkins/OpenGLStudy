@@ -59,13 +59,15 @@ void MainWindow::initialize()
 	{
 		mBuffer = QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
 		mBuffer.create();
+		mBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
 		mBuffer.bind();
 		mBuffer.allocate(grass_blade, sizeof(grass_blade));
-
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(0);
-
+		
 		initShaders();
+
+		mProgram.enableAttributeArray(0);
+		mProgram.setAttributeBuffer(0, GL_FLOAT, 0, 2);
+
 		initTextures();
 	}
 	mVao.release();
