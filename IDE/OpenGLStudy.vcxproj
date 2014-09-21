@@ -94,6 +94,7 @@
     <ClCompile Include="..\Src\OpenGLWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Src\Bind.h" />
     <ClInclude Include="..\Src\ktx.h" />
     <ClInclude Include="..\Src\Main.h" />
     <ClInclude Include="..\Src\MainWindow.h" />

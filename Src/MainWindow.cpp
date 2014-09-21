@@ -7,6 +7,7 @@
 
 #include "MainWindow.h"
 #include "ktx.h"
+#include "Bind.h"
 
 static const GLfloat grass_blade[] =
 {
@@ -86,12 +87,15 @@ void MainWindow::render()
 	const qreal retinaScale = devicePixelRatio();
 	glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
-	float currentTime = 3.0;
-	float t = (float)currentTime * 0.02f;
-	float r = 550.0f;
+	
 
+	//BIND(mProgram,
 	mProgram.bind();
 	{
+		float currentTime = 3.0;
+		float t = (float)currentTime * 0.02f;
+		float r = 550.0f;
+
 		QMatrix4x4 mvMatrix;
 		mvMatrix.lookAt(QVector3D(sinf(t) * r, 25.0f, cosf(t) * r),
 												 QVector3D(0.0f, -50.0f, 0.0f),
@@ -109,6 +113,8 @@ void MainWindow::render()
 			const int count = 1024*1024*8;
 			glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, count);
 		}
-	}
+		mVao.release();
+	}//)
 	mProgram.release();
+
 }
