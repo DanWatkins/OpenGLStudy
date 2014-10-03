@@ -11,6 +11,23 @@
 #include "OpenGLWindow.h"
 #include "Object.h"
 
+const int NumberOfDraws = 50000;
+
+struct DrawArraysIndirectCommand
+{
+	GLuint count, primCount, first, baseInstance;
+};
+
+
+enum class Mode
+{
+	First,
+	MultiDraw = 0,
+	SeparateDraws,
+	Max = SeparateDraws
+};
+
+
 class MainWindow : public OpenGLWindow
 {
 public:
@@ -24,19 +41,20 @@ public:
 
 private:
 	QOpenGLShaderProgram mProgram;
-	QOpenGLVertexArrayObject mVao;
-	QOpenGLBuffer mBuffer;
 
-	GLuint mTexGrassColor, mTexGrassLength, mTexGrassOrientation, mTexGrassgBend;
-
-
-	void keyPressEvent(QKeyEvent *ev);
+	sb6::object mObject;
+	GLuint mIndirectDrawBuffer, mDrawIndexBuffer;
 
 	struct
 	{
-		GLint mvpMatrix;
+		GLint time;
+		GLint matrixView, matrixProj, matrixViewProj;
 	} uniforms;
 
+	Mode mMode;
+	bool mPaused, mVsync;
+
+	void keyPressEvent(QKeyEvent *ev);
 	void initShaders();
 };
 

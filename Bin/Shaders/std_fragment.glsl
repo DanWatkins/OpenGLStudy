@@ -1,10 +1,15 @@
 #version 430 core
 
+out vec4 color;
 
-in vec4 color;
-out vec4 outputColor;
+in VSOut
+{
+	vec3 normal;
+	vec4 color;
+} fsIn;
 
 void main()
 {
-	outputColor = color;
+	vec3 N = normalize(fsIn.normal);
+	color = fsIn.color * abs(N.z);
 }
