@@ -11,12 +11,15 @@
 
 #define NUMBER_OF_DRAWS 50000
 
-void MainWindow::initShaders()
+bool MainWindow::initShaders()
 {
+	std::cout << "Loading update program..." << std::endl;
 	mProgramUpdate.addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/update.vs.glsl");
 	mProgramUpdate.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/update.fs.glsl");
+	
+	std::cout << "Loading render program..." << std::endl;
 	mProgramRender.addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/render.vs.glsl");
-	mProgramRender.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shader/render.fs.glsl");
+	mProgramRender.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/render.fs.glsl");
 
 	static const char* tfVaryings[] =
 	{
@@ -25,15 +28,19 @@ void MainWindow::initShaders()
 	};
 
 	glTransformFeedbackVaryings(mProgramUpdate.programId(), 2, tfVaryings, GL_SEPARATE_ATTRIBS);
+	
 
 	if (mProgramUpdate.link() == false ||
 		mProgramRender.link() == false)
 	{
 		std::cout << "Problem linking shaders" << std::endl;
+		return false;
 	}
 	else
 	{
+		
 		std::cout << "Initialized shaders" << std::endl;
+		return true;
 	}
 }
 
@@ -41,11 +48,14 @@ void MainWindow::initShaders()
 void MainWindow::initialize()
 {
 	OpenGLWindow::initialize();
-	initShaders();
+	if (initShaders() == false)
+	{
+		QWindow::close();
+	}
 
 	QVector4D *initialPositions = new QVector4D[PointsTotal];
 	QVector3D *initialVelocities = new QVector3D[PointsTotal];
-	QVector4D *connectionVectors = new QVector4D[PointsTotal];
+	QVector<int> *connectionVectors = new QVector<int>[PointsTotal];
 
 	int n=0;
 
@@ -62,7 +72,7 @@ void MainWindow::initialize()
 											0.6f * sinf(fi) * cosf(fj),
 											1.0f);
 			initialVelocities[n] = QVector3D(0, 0, 0);
-			connectionVectors[n] = QVector4D(-1, -1, -1, -1);
+			connectionVectors[n] = QVector<int>(4, -1);
 
 			if (j != (PointsY - 1))
 			{
@@ -103,9 +113,9 @@ void MainWindow::initialize()
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, mVbo[BufferType::Connection]);
-		glBufferData(GL_ARRAY_BUFFER, PointsTotal*sizeof(QVector4D),
+		glBufferData(GL_ARRAY_BUFFER, PointsTotal*sizeof(int)*4,
 					 connectionVectors, GL_STATIC_DRAW);
-		glVertexAttribIPointer(2, 4, GL_FLOAT, 0, NULL);	//TODO INT THIS
+		glVertexAttribIPointer(2, 4, GL_INT, 0, NULL);
 		glEnableVertexAttribArray(2);
 	}
 
@@ -179,7 +189,7 @@ void MainWindow::render()
 
 	//prepare
 	{
-		static const GLfloat color[] = { 0.95f, 0.95f, 0.95f, 1.0f };
+		static const GLfloat color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		static const GLfloat ones[] = { 1.0f };
 		glClearBufferfv(GL_COLOR, 0, color);
 		glClearBufferfv(GL_DEPTH, 0, ones);

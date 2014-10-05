@@ -42,7 +42,7 @@ public:
 
 private:
 	void keyPressEvent(QKeyEvent *ev);
-	void initShaders();
+	bool initShaders();
 
 
 private:

@@ -21,7 +21,7 @@ void main()
 {
 	vec3 position = inPositionMass.xyz;
 	float mass = inPositionMass.w;
-	vec3 velocity = velocity;
+	vec3 velocity = inVelocity;
 	vec3 force = gravity*mass - damping*velocity;
 	bool fixedNode = true;
 
@@ -30,8 +30,8 @@ void main()
 		if (inConnections[i] != -1)
 		{
 			//q is the position of the other vertex
-			vec3 q = texelFetch(texPosition, inConnections[i].xyz);
-			vec3 d = q-p;
+			vec3 q = texelFetch(texPosition, inConnections[i]).xyz;
+			vec3 d = q-position;
 
 			float x = length(d);
 			force += -k * (restLength - x) * normalize(d);
@@ -59,5 +59,5 @@ void main()
 
 	//write the outputs
 	tfPositionMass = vec4(position+displacement, mass);
-	tfVelocity = velocity
+	tfVelocity = finalVelocity;
 }
