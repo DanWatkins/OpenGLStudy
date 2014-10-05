@@ -104,8 +104,10 @@
     <ClInclude Include="..\Src\TypeOf.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Shaders\std_fragment.glsl" />
-    <None Include="..\Bin\Shaders\std_vertex.glsl" />
+    <None Include="..\Bin\Shaders\render.fs.glsl" />
+    <None Include="..\Bin\Shaders\render.vs.glsl" />
+    <None Include="..\Bin\Shaders\update.fs.glsl" />
+    <None Include="..\Bin\Shaders\update.vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

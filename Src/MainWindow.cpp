@@ -13,20 +13,28 @@
 
 void MainWindow::initShaders()
 {
-	mProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/std_vertex.glsl");
-	mProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/std_fragment.glsl");
+	mProgramUpdate.addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/update.vs.glsl");
+	mProgramUpdate.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shaders/update.fs.glsl");
+	mProgramRender.addShaderFromSourceFile(QOpenGLShader::Vertex, "./Shaders/render.vs.glsl");
+	mProgramRender.addShaderFromSourceFile(QOpenGLShader::Fragment, "./Shader/render.fs.glsl");
 
-	if (mProgram.link() == false)
+	static const char* tfVaryings[] =
+	{
+		"tfPositionMass",
+		"tfVelocity"
+	};
+
+	glTransformFeedbackVaryings(mProgramUpdate.programId(), 2, tfVaryings, GL_SEPARATE_ATTRIBS);
+
+	if (mProgramUpdate.link() == false ||
+		mProgramRender.link() == false)
+	{
 		std::cout << "Problem linking shaders" << std::endl;
+	}
 	else
 	{
-		uniforms.time = mProgram.uniformLocation("time");
-		uniforms.matrixView = mProgram.uniformLocation("matrixView");
-		uniforms.matrixProj = mProgram.uniformLocation("matrixProj");
-		uniforms.matrixViewProj = mProgram.uniformLocation("matrixViewProj");
+		std::cout << "Initialized shaders" << std::endl;
 	}
-
-	std::cout << "Initialized shaders" << std::endl;
 }
 
 
@@ -35,62 +43,140 @@ void MainWindow::initialize()
 	OpenGLWindow::initialize();
 	initShaders();
 
-	mObject.load("./Objects/asteroids.sbm");
+	QVector4D *initialPositions = new QVector4D[PointsTotal];
+	QVector3D *initialVelocities = new QVector3D[PointsTotal];
+	QVector4D *connectionVectors = new QVector4D[PointsTotal];
 
-	glGenBuffers(1, &mIndirectDrawBuffer);
-	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mIndirectDrawBuffer);
-	glBufferData(GL_DRAW_INDIRECT_BUFFER,
-				 NumberOfDraws * sizeof(DrawArraysIndirectCommand),
-				 nullptr, GL_STATIC_DRAW);
+	int n=0;
 
-	void *range = glMapBufferRange(GL_DRAW_INDIRECT_BUFFER, 0,
-								   NumberOfDraws * sizeof(DrawArraysIndirectCommand),
-								   GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-	DrawArraysIndirectCommand *cmd = (DrawArraysIndirectCommand*)range;
-
-	for (int i=0; i<NumberOfDraws; i++)
+	for (int j=0; j<PointsY; j++)
 	{
-		mObject.get_sub_object_info(i % mObject.get_sub_object_count(),
-									cmd[i].first, cmd[i].count);
-		cmd[i].primCount = 1;
-		cmd[i].baseInstance = i;
-	}
+		float fj = (float)j / (float)PointsY;
 
-	glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
-
-	glBindVertexArray(mObject.get_vao());
-	{
-		glGenBuffers(1, &mDrawIndexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, mDrawIndexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, NumberOfDraws * sizeof(GLuint),
-					 NULL, GL_STATIC_DRAW);
-
-		GLuint *drawIndex = (GLuint*)glMapBufferRange(GL_ARRAY_BUFFER, 0,
-													  NumberOfDraws * sizeof(GLuint),
-													  GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-
-		for (int i=0; i<NumberOfDraws; i++)
+		for (int i=0; i<PointsX; i++)
 		{
-			drawIndex[i] = i;
+			float fi = (float)i / (float)PointsX;
+
+			initialPositions[n] = QVector4D((fi - 0.5f) * (float)PointsX,
+											(fj - 0.5f) * (float)PointsY,
+											0.6f * sinf(fi) * cosf(fj),
+											1.0f);
+			initialVelocities[n] = QVector3D(0, 0, 0);
+			connectionVectors[n] = QVector4D(-1, -1, -1, -1);
+
+			if (j != (PointsY - 1))
+			{
+				if (i != 0)
+					connectionVectors[n][0] = n-1;
+
+				if (j != 0)
+					connectionVectors[n][1] = n-PointsX;
+
+				if (i != (PointsX-1))
+					connectionVectors[n][2] = n+1;
+
+				if (j != (PointsY-1))
+					connectionVectors[n][3] = n+PointsX;
+			}
+
+			n++;
 		}
-
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-
-		glVertexAttribIPointer(10, 1, GL_UNSIGNED_INT, 0, nullptr);
-		glVertexAttribDivisor(10, 1);
-		glEnableVertexAttribArray(10);
-
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glEnable(GL_CULL_FACE);
 	}
-	glBindVertexArray(0);
+
+	glGenVertexArrays(2, mVao);
+	glGenBuffers(5, mVbo);
+
+	for (int i=0; i<2; i++)
+	{
+		glBindVertexArray(mVao[i]);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mVbo[BufferType::PositionA + i]);
+		glBufferData(GL_ARRAY_BUFFER, PointsTotal*sizeof(QVector4D),
+					 initialPositions, GL_DYNAMIC_COPY);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mVbo[BufferType::VelocityA + i]);
+		glBufferData(GL_ARRAY_BUFFER, PointsTotal*sizeof(QVector3D),
+					 initialVelocities, GL_DYNAMIC_COPY);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(1);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mVbo[BufferType::Connection]);
+		glBufferData(GL_ARRAY_BUFFER, PointsTotal*sizeof(QVector4D),
+					 connectionVectors, GL_STATIC_DRAW);
+		glVertexAttribIPointer(2, 4, GL_FLOAT, 0, NULL);	//TODO INT THIS
+		glEnableVertexAttribArray(2);
+	}
+
+	delete[] connectionVectors;
+	delete[] initialVelocities;
+	delete[] initialPositions;
+
+	glGenTextures(2, mPosTbo);
+	glBindTexture(GL_TEXTURE_BUFFER, mPosTbo[0]);
+	glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, mVbo[BufferType::PositionA]);
+	glBindTexture(GL_TEXTURE_BUFFER, mPosTbo[1]);
+	glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, mVbo[BufferType::PositionB]);
+
+	int lines = (PointsX-1)*PointsY + (PointsY-1)*PointsX;
+
+	glGenBuffers(1, &mIbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, lines * 2 * sizeof(int), NULL, GL_STATIC_DRAW);
+
+	int *e = (int*)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, lines*2*sizeof(int), 
+									GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+	for (int j=0; j<PointsY; j++)
+	{
+		for (int i=0; i<PointsX-1; i++)
+		{
+			*e++ = i + j*PointsX;
+			*e++ = 1 + i + j*PointsX;
+		}
+	}
+
+	for (int i=0; i<PointsX; i++)
+	{
+		for (int j=0; j<PointsY-1; j++)
+		{
+			*e++ = i + j*PointsX;
+			*e++ = PointsX + i + j*PointsX;
+		}
+	}
+
+	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 }
 
 
 void MainWindow::render()
 {
 	OpenGLWindow::render();
+
+	Bind(mProgramUpdate,
+	{
+		glEnable(GL_RASTERIZER_DISCARD);
+
+		for (int i=mIterationsPerFrame; i!=0; --i)
+		{
+			glBindVertexArray(mVao[mIterationIndex & 1]);
+			glBindTexture(GL_TEXTURE_BUFFER, mPosTbo[mIterationIndex & 1]);
+			mIterationIndex++;
+
+			glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+							 mVbo[PositionA + (mIterationIndex & 1)]);
+			glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1,
+							 mVbo[VelocityA + (mIterationIndex & 1)]);
+
+			glBeginTransformFeedback(GL_POINTS);
+			glDrawArrays(GL_POINTS, 0, PointsTotal);
+			glEndTransformFeedback();
+		}
+
+		glDisable(GL_RASTERIZER_DISCARD);
+	})
+
 	//prepare
 	{
 		static const GLfloat color[] = { 0.95f, 0.95f, 0.95f, 1.0f };
@@ -102,60 +188,18 @@ void MainWindow::render()
 		glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 	}
 
-
-	static double currentTime = 0.0;
-	currentTime += 0.1;
-
-	static double lastTime = 0.0;
-	static double totalTime = 0.0;
-
-	if (!mPaused)
-		totalTime += (currentTime - lastTime);
-
-	lastTime = currentTime;
-
-	float t = float(totalTime);
-	int i = int(totalTime * 3.0f);
-
-	QMatrix4x4 matrixView;
+	Bind(mProgramRender,
 	{
-		QVector3D eye(100.0f * cosf(t * 0.023f), 100.0f * cosf(t * 0.023f), 300.0f * sinf(t * 0.037f) - 600.0f);
-		QVector3D center(0.0f, 0.0f, 260.0f);
-		QVector3D up(0.1f - cosf(t * 0.1f) * 0.3f, 1.0f, 0.0f);
-		up.normalize();
-
-		matrixView.lookAt(eye, center, up);
-	}
-
-	QMatrix4x4 matrixProj;
-	matrixProj.perspective(50.0f, (float)width() / (float)height(), 1.0f, 2000.0f);
-
-
-	Bind(mProgram,
-	{
-		mProgram.setUniformValue(uniforms.matrixView, matrixView);
-		mProgram.setUniformValue(uniforms.matrixProj, matrixProj);
-		mProgram.setUniformValue(uniforms.matrixViewProj, matrixProj * matrixView);
-		
-		glBindVertexArray(mObject.get_vao());
-		
-		printf("mode=%i\n", mMode);
-
-
-		if (mMode == Mode::MultiDraw)
+		if (mDrawPoints)
 		{
-			glMultiDrawArraysIndirect(GL_TRIANGLES, NULL, NumberOfDraws, 0);
+			glPointSize(4.0f);
+			glDrawArrays(GL_POINTS, 0, PointsTotal);
 		}
-		else if (mMode == Mode::SeparateDraws)
-		{
-			for (int j=0; j<NumberOfDraws; j++)
-			{
-				GLuint first;
-				GLuint count;
 
-				mObject.get_sub_object_info(j % mObject.get_sub_object_count(), first, count);
-				glDrawArraysInstancedBaseInstance(GL_TRIANGLES, first, count, 1, j);
-			}
+		if (mDrawLines)
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
+			glDrawElements(GL_LINES, ConnectionsTotal * 2, GL_UNSIGNED_INT, NULL);
 		}
 	})
 }
@@ -166,17 +210,5 @@ void MainWindow::keyPressEvent(QKeyEvent *ev)
 	switch (ev->key())
 	{
 	case Qt::Key_Escape: QWindow::close(); break;
-	case Qt::Key_M:
-		mMode = Mode::MultiDraw;
-		break;
-
-	case Qt::Key_S:
-		mMode = Mode::SeparateDraws;
-		break;
-
-
-	case Qt::Key_Q:
-		mMode = Mode::Max;
-		break;
 	}
 }

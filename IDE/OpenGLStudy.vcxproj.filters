@@ -23,10 +23,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Shaders\std_fragment.glsl">
+    <None Include="..\Bin\Shaders\render.fs.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\Bin\Shaders\std_vertex.glsl">
+    <None Include="..\Bin\Shaders\render.vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Bin\Shaders\update.fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\Bin\Shaders\update.vs.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
