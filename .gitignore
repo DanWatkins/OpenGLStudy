@@ -35,3 +35,4 @@ IDE/OpenGLStudy.pro.user.3.2-pre1
 *.TMP
 IDE/OpenGLStudy.vcxproj.dan.nvuser
 Bin/nsight_profiler.cfg
+ComputeShader/GeneratedFiles/
