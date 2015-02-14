@@ -1,46 +1,28 @@
 #include <QScreen>
 #include "ComputeShader.h"
 
-ComputeShader::ComputeShader()
-    : m_program(0)
-    , m_frame(0)
+ComputeShader::ComputeShader() :
+    m_frame(0)
 {
 }
 
-static const char *vertexShaderSource =
-    "attribute highp vec4 posAttr;\n"
-    "attribute lowp vec4 colAttr;\n"
-    "varying lowp vec4 col;\n"
-    "uniform highp mat4 matrix;\n"
-    "void main() {\n"
-    "   col = colAttr;\n"
-    "   gl_Position = matrix * posAttr;\n"
-    "}\n";
-
-static const char *fragmentShaderSource =
-    "varying lowp vec4 col;\n"
-    "void main() {\n"
-    "   gl_FragColor = col;\n"
-    "}\n";
-
-
-GLuint ComputeShader::loadShader(GLenum type, const char *source)
-{
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, 0);
-    glCompileShader(shader);
-    return shader;
-}
 
 void ComputeShader::initialize()
 {
-    m_program = new QOpenGLShaderProgram(this);
-    m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
-    m_program->link();
-    m_posAttr = m_program->attributeLocation("posAttr");
-    m_colAttr = m_program->attributeLocation("colAttr");
-    m_matrixUniform = m_program->uniformLocation("matrix");
+	QOpenGLShader vertexShader(QOpenGLShader::Vertex);
+	vertexShader.compileSourceFile("main.vert.glsl");
+	mProgram.addShader(&vertexShader);
+
+	QOpenGLShader fragmentShader(QOpenGLShader::Fragment);
+	fragmentShader.compileSourceFile("main.frag.glsl");
+	mProgram.addShader(&fragmentShader);
+
+	if (!mProgram.link())
+		qFatal("Error linking shaders");
+
+    m_posAttr = mProgram.attributeLocation("posAttr");
+    m_colAttr = mProgram.attributeLocation("colAttr");
+    m_matrixUniform = mProgram.uniformLocation("matrix");
 }
 
 
@@ -51,14 +33,14 @@ void ComputeShader::render()
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    m_program->bind();
+    mProgram.bind();
 
     QMatrix4x4 matrix;
     matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -2);
     matrix.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
 
-    m_program->setUniformValue(m_matrixUniform, matrix);
+    mProgram.setUniformValue(m_matrixUniform, matrix);
 
     GLfloat vertices[] = {
         0.0f, 0.707f,
@@ -83,7 +65,7 @@ void ComputeShader::render()
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
 
-    m_program->release();
+    mProgram.release();
 
     ++m_frame;
 }

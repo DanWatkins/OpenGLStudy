@@ -13,13 +13,11 @@ public:
     void render() Q_DECL_OVERRIDE;
 
 private:
-    GLuint loadShader(GLenum type, const char *source);
-
     GLuint m_posAttr;
     GLuint m_colAttr;
     GLuint m_matrixUniform;
 
-    QOpenGLShaderProgram *m_program;
+    QOpenGLShaderProgram mProgram;
     int m_frame;
 };
 
