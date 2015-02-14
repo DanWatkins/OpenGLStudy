@@ -1,6 +1,6 @@
 #include <QtGui/QGuiApplication>
 
-#include "ComputeShader.h"
+#include "PrefixSum.h"
 
 int main(int argc, char **argv)
 {
@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     QSurfaceFormat format;
     format.setSamples(16);
 
-    ComputeShader window;
+    PrefixSum window;
     window.setFormat(format);
     window.resize(640, 480);
     window.show();

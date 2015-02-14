@@ -17,21 +17,18 @@
       <ParseFiles>true</ParseFiles>
     </Filter>
     <Filter Include="Generated Files\Debug">
-      <UniqueIdentifier>{888ee564-4c2f-4674-bd2d-3f388fc9cac9}</UniqueIdentifier>
+      <UniqueIdentifier>{ee9643b9-62f6-4208-a689-61f15a35ce43}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
     <Filter Include="Generated Files\Release">
-      <UniqueIdentifier>{bf894c7d-cb3b-4f4d-a740-d78b56b94c2b}</UniqueIdentifier>
+      <UniqueIdentifier>{fb2e187f-5361-4c74-894e-cea8158713c6}</UniqueIdentifier>
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ComputeShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenGLWindow.cpp">
+    <ClCompile Include="..\..\Src\Common\OpenGLWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_OpenGLWindow.cpp">
@@ -40,17 +37,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_OpenGLWindow.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ComputeShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="OpenGLWindow.h">
+    <CustomBuild Include="..\..\Src\Common\OpenGLWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

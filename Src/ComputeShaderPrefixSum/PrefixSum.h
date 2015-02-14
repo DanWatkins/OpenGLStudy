@@ -2,9 +2,9 @@
 #define _OpenGLStudy_ComputeShader_H
 
 #include <QtGui/QOpenGLShaderProgram>
-#include "OpenGLWindow.h"
+#include <Common/OpenGLWindow.h>
 
-class ComputeShader : public OpenGLWindow
+class PrefixSum : public OpenGLWindow
 {
 public:
     void initialize() override;

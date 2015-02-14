@@ -1,7 +1,7 @@
 #include <QScreen>
 #include <QtCore/QThread>
 
-#include "ComputeShader.h"
+#include "PrefixSum.h"
 
 static inline float random_float()
 {
@@ -17,12 +17,12 @@ static inline float random_float()
 }
 
 
-void ComputeShader::initialize()
+void PrefixSum::initialize()
 {
 	//load shaders
 	{
 		QOpenGLShader vertexShader(QOpenGLShader::Compute);
-		vertexShader.compileSourceFile("main.cs.glsl");
+		vertexShader.compileSourceFile("ComputeShaderPrefixSum/main.cs.glsl");
 		mProgram.addShader(&vertexShader);
 
 		if (!mProgram.link())
@@ -45,7 +45,7 @@ void ComputeShader::initialize()
 }
 
 
-void ComputeShader::render()
+void PrefixSum::render()
 {
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
