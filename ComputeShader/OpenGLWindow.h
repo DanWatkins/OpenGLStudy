@@ -2,13 +2,13 @@
 #define _OpenGLStudy_OpenGLWindow_H
 
 #include <QtGui/QWindow>
-#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_4_3_Core>
 
 class QPainter;
 class QOpenGLContext;
 class QOpenGLPaintDevice;
 
-class OpenGLWindow : public QWindow, protected QOpenGLFunctions
+class OpenGLWindow : public QWindow, protected QOpenGLFunctions_4_3_Core
 {
     Q_OBJECT
 public:

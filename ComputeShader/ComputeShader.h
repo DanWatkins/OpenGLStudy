@@ -7,18 +7,21 @@
 class ComputeShader : public OpenGLWindow
 {
 public:
-    ComputeShader();
-
-    void initialize() Q_DECL_OVERRIDE;
-    void render() Q_DECL_OVERRIDE;
+    void initialize() override;
+    void render() override;
 
 private:
-    GLuint m_posAttr;
-    GLuint m_colAttr;
-    GLuint m_matrixUniform;
-
     QOpenGLShaderProgram mProgram;
-    int m_frame;
+	
+	static const int mNumberOfElements = 2048;
+
+	float mInputData[mNumberOfElements];
+	float mOutputData[mNumberOfElements];
+
+	struct Names
+	{
+		GLuint dataBuffer[2];
+	} mNames;
 };
 
 #endif

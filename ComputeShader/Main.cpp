@@ -4,6 +4,11 @@
 
 int main(int argc, char **argv)
 {
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+
     QGuiApplication app(argc, argv);
 
     QSurfaceFormat format;

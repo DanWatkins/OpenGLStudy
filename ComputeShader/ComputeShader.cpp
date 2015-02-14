@@ -1,28 +1,47 @@
 #include <QScreen>
+#include <QtCore/QThread>
+
 #include "ComputeShader.h"
 
-ComputeShader::ComputeShader() :
-    m_frame(0)
+static inline float random_float()
 {
+    static unsigned int seed = 0x13371337;
+
+    float res;
+    
+    seed *= 16807;
+    unsigned int tmp = seed ^ (seed >> 4) ^ (seed << 15);
+    *((unsigned int *) &res) = (tmp >> 9) | 0x3F800000;
+
+    return (res - 1.0f);
 }
 
 
 void ComputeShader::initialize()
 {
-	QOpenGLShader vertexShader(QOpenGLShader::Vertex);
-	vertexShader.compileSourceFile("main.vert.glsl");
-	mProgram.addShader(&vertexShader);
+	//load shaders
+	{
+		QOpenGLShader vertexShader(QOpenGLShader::Compute);
+		vertexShader.compileSourceFile("main.cs.glsl");
+		mProgram.addShader(&vertexShader);
 
-	QOpenGLShader fragmentShader(QOpenGLShader::Fragment);
-	fragmentShader.compileSourceFile("main.frag.glsl");
-	mProgram.addShader(&fragmentShader);
+		if (!mProgram.link())
+			qFatal("Error linking shaders");
+	}
 
-	if (!mProgram.link())
-		qFatal("Error linking shaders");
+	//reserve compute space and generate random data to sum
+	{
+		glGenBuffers(2, mNames.dataBuffer);
 
-    m_posAttr = mProgram.attributeLocation("posAttr");
-    m_colAttr = mProgram.attributeLocation("colAttr");
-    m_matrixUniform = mProgram.uniformLocation("matrix");
+		for (int i=0; i<2; i++)
+		{
+			glBindBuffer(GL_SHADER_STORAGE_BUFFER, mNames.dataBuffer[i]);
+			glBufferData(GL_SHADER_STORAGE_BUFFER, mNumberOfElements * sizeof(GLfloat), nullptr, GL_DYNAMIC_COPY);
+		}
+
+		for (int i=0; i<mNumberOfElements; i++)
+			mInputData[i] = random_float();
+	}
 }
 
 
@@ -32,40 +51,30 @@ void ComputeShader::render()
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
     glClear(GL_COLOR_BUFFER_BIT);
+	static const int totalSize = sizeof(float) * mNumberOfElements;
 
-    mProgram.bind();
+	glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, mNames.dataBuffer[0], 0, totalSize);
+	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, totalSize, mInputData);
+    
+	mProgram.bind();
+	{
+		glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 1, mNames.dataBuffer[1], 0, totalSize);
+		glDispatchCompute(1, 1, 1);
 
-    QMatrix4x4 matrix;
-    matrix.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f);
-    matrix.translate(0, 0, -2);
-    matrix.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0);
+		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+		glFinish();
 
-    mProgram.setUniformValue(m_matrixUniform, matrix);
+		glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, mNames.dataBuffer[1], 0, totalSize);
 
-    GLfloat vertices[] = {
-        0.0f, 0.707f,
-        -0.5f, -0.5f,
-        0.5f, -0.5f
-    };
+		if (float *mapped = (float*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, totalSize, GL_MAP_READ_BIT))
+		{
+			for (int i=0; i<40&&i<mNumberOfElements; i++)
+				qDebug() << mapped[i];
 
-    GLfloat colors[] = {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f
-    };
-
-    glVertexAttribPointer(m_posAttr, 2, GL_FLOAT, GL_FALSE, 0, vertices);
-    glVertexAttribPointer(m_colAttr, 3, GL_FLOAT, GL_FALSE, 0, colors);
-
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(0);
-
+			glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+		}
+	}
     mProgram.release();
 
-    ++m_frame;
+	QThread::msleep(10000);
 }
