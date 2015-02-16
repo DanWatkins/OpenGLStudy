@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TessellationRect", "IDE\Tes
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeShaderPrefixSum", "IDE\ComputeShaderPrefixSum\ComputeShaderPrefixSum.vcxproj", "{976CD314-61A7-4069-9E25-49E85C0DC950}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TessellationTerrain", "IDE\TessellationTerrain\TessellationTerrain.vcxproj", "{B9D5E6D6-576F-4220-8521-6502A3BE2F60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{976CD314-61A7-4069-9E25-49E85C0DC950}.Debug|Win32.Build.0 = Debug|Win32
 		{976CD314-61A7-4069-9E25-49E85C0DC950}.Release|Win32.ActiveCfg = Release|Win32
 		{976CD314-61A7-4069-9E25-49E85C0DC950}.Release|Win32.Build.0 = Release|Win32
+		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Debug|Win32.Build.0 = Debug|Win32
+		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Release|Win32.ActiveCfg = Release|Win32
+		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,7 +7,7 @@ void main()
 	if (gl_InvocationID == 0)
 	{
 		gl_TessLevelInner[0] = 3.0;
-		gl_TessLevelInner[1] = 4.0;
+		gl_TessLevelInner[1] = 3.0;
 		
 		gl_TessLevelOuter[0] = 3.0;
 		gl_TessLevelOuter[1] = 5.0;
