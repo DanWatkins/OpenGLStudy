@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{bb9f20e8-3d2e-4bcf-948a-a12d0de791a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Bin\BasicTessellationTerrain\main.fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\Bin\BasicTessellationTerrain\main.tcs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\Bin\BasicTessellationTerrain\main.tes.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\Bin\BasicTessellationTerrain\main.vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Src\BasicTessellationTerrain\App.cpp" />
+  </ItemGroup>
+</Project>

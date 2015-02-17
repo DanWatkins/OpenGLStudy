@@ -11,6 +11,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeShaderPrefixSum", "I
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TessellationTerrain", "IDE\TessellationTerrain\TessellationTerrain.vcxproj", "{B9D5E6D6-576F-4220-8521-6502A3BE2F60}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tessellation", "Tessellation", "{4C6683A6-050A-406B-81C5-CB63CA898BF1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compute", "Compute", "{D718530F-54C7-4CF5-9022-7DC7628AD3AE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicTessellationTerrain", "IDE\BasicTerrainTessellation\BasicTessellationTerrain.vcxproj", "{6DF5947B-58DE-4AB5-BF6B-1D196B5B210E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,8 +39,18 @@ Global
 		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Debug|Win32.Build.0 = Debug|Win32
 		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Release|Win32.ActiveCfg = Release|Win32
 		{B9D5E6D6-576F-4220-8521-6502A3BE2F60}.Release|Win32.Build.0 = Release|Win32
+		{6DF5947B-58DE-4AB5-BF6B-1D196B5B210E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6DF5947B-58DE-4AB5-BF6B-1D196B5B210E}.Debug|Win32.Build.0 = Debug|Win32
+		{6DF5947B-58DE-4AB5-BF6B-1D196B5B210E}.Release|Win32.ActiveCfg = Release|Win32
+		{6DF5947B-58DE-4AB5-BF6B-1D196B5B210E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B12702AD-ABFB-343A-A199-8E24837244A3} = {4C6683A6-050A-406B-81C5-CB63CA898BF1}
+		{976CD314-61A7-4069-9E25-49E85C0DC950} = {D718530F-54C7-4CF5-9022-7DC7628AD3AE}
+		{B9D5E6D6-576F-4220-8521-6502A3BE2F60} = {4C6683A6-050A-406B-81C5-CB63CA898BF1}
+		{6DF5947B-58DE-4AB5-BF6B-1D196B5B210E} = {4C6683A6-050A-406B-81C5-CB63CA898BF1}
 	EndGlobalSection
 EndGlobal
