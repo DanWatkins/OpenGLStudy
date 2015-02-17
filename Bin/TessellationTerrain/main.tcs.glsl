@@ -36,8 +36,8 @@ void main()
 		
 		gl_TessLevelOuter[0] = l0;
 		gl_TessLevelOuter[1] = l1;
-		gl_TessLevelOuter[2] = l3;
-		gl_TessLevelOuter[3] = l4;
+		gl_TessLevelOuter[2] = l2;
+		gl_TessLevelOuter[3] = l3;
 		gl_TessLevelOuter[0] = min(l1, l3);
 		gl_TessLevelOuter[1] = min(l0, l2);
 	}

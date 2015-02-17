@@ -4,6 +4,12 @@
 #include <QtGui/QWindow>
 #include <QtGui/QOpenGLFunctions_4_3_Core>
 
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+
+typedef glm::mat4 Mat4;
+typedef glm::vec3 Vec3;
+
 class QPainter;
 class QOpenGLContext;
 class QOpenGLPaintDevice;
