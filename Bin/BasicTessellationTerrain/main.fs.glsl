@@ -9,8 +9,11 @@ in TESOut
 
 out vec4 color;
 
+uniform float height;
+
 
 void main()
 {
-	color = vec4(0.0, 0.0, 0.0, 1.0);
+	float scale = fsIn.worldCoord.y / height;
+	color = vec4(scale, scale, scale, 1.0);
 }

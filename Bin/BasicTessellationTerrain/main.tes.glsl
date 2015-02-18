@@ -2,7 +2,7 @@
 
 layout (quads, fractional_odd_spacing) in;
 
-out TCSOut
+in TCSOut
 {
 	vec2 heightTc;
 } tesIn[];
@@ -17,6 +17,7 @@ out TESOut
 
 uniform mat4 mvMatrix;
 uniform mat4 projMatrix;
+uniform float height;
 
 layout (binding = 0) uniform sampler2D heightMapSampler;
 
@@ -32,7 +33,7 @@ void main()
 	vec4 p1 = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
 	vec4 p2 = mix(gl_in[2].gl_Position, gl_in[3].gl_Position, gl_TessCoord.x);
 	vec4 pos = mix(p1, p2, gl_TessCoord.y);
-	pos.y += texture(heightMapSampler, tc).r * 10.0;
+	pos.y += texture(heightMapSampler, tc).r * height;
 
 	tesOut.heightTc = tc;
 	tesOut.worldCoord = pos.xyz;

@@ -42,6 +42,7 @@ public:
 		{
 			GLint loc = mProgram.uniformLocation("terrainSize");
 			glUniform1i(loc, mSize);
+			glUniform1f(mProgram.uniformLocation("height"), mHeight);
 			mUniforms.mvMatrix = mProgram.uniformLocation("mvMatrix");
 			mUniforms.projMatrix = mProgram.uniformLocation("projMatrix");
 		}
@@ -57,7 +58,14 @@ public:
 			for (int y=0; y<mSize; y++)
 			{
 				for (int x=0; x<mSize; x++)
-					displacmentMap.append((x+y) / base);
+					displacmentMap.append(randFloat(0.0, 1.0));
+			}
+
+			//smooth
+			for (int i=0; i<displacmentMap.count()-1; i++)
+			{
+				float next = displacmentMap[i+1];
+				displacmentMap[i] = (displacmentMap[i]+next)/2.0f;
 			}
 
 			glGenTextures(1, &tex);
@@ -97,23 +105,8 @@ public:
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, tex);
 
-			//glUniformMatrix4fv(mUniforms.mvMatrix, 1, GL_FALSE, glm::value_ptr(mCamera.viewMatrix()));
-			//glUniformMatrix4fv(mUniforms.projMatrix, 1, GL_FALSE, glm::value_ptr(mCamera.perspectiveMatrix()));
-
-			if (true)
-			{
-				static float totalTime = 0.0f;
-				totalTime += 0.01f;
-
-				float t = (float)totalTime * 0.03f;
-				float r = sinf(t * 5.37f) * 15.0f + 16.0f;
-				float h = cosf(t * 4.79f) * 2.0f + 10.2f;
-
-				Mat4 mvMatrix = glm::lookAt(Vec3(sinf(t) * r, h, cosf(t) * r), Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
-				Mat4 projMatrix = glm::perspective(60.0f, (float)width() / (float)height(), 0.1f, 1000.0f);
-				glUniformMatrix4fv(mUniforms.mvMatrix, 1, GL_FALSE, glm::value_ptr(mvMatrix));
-				glUniformMatrix4fv(mUniforms.projMatrix, 1, GL_FALSE, glm::value_ptr(projMatrix));
-			}
+			glUniformMatrix4fv(mUniforms.mvMatrix, 1, GL_FALSE, glm::value_ptr(mCamera.viewMatrix()));
+			glUniformMatrix4fv(mUniforms.projMatrix, 1, GL_FALSE, glm::value_ptr(mCamera.perspectiveMatrix()));
 
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_TRUE);
@@ -131,6 +124,7 @@ public:
 	{
 		OpenGLWindow::keyPressEvent(ev);
 		const float speed = 0.1f;
+		const float rotSpeed = 0.3f;
 
 		switch (ev->key())
 		{
@@ -147,6 +141,15 @@ public:
 			mCamera.incPosition(speed * -mCamera.right()); break;
 		case Qt::Key_D:
 			mCamera.incPosition(speed * mCamera.right()); break;
+
+		case Qt::Key_Q:
+			mCamera.incOrientation(-rotSpeed, 0.0f); break;
+		case Qt::Key_E:
+			mCamera.incOrientation(rotSpeed, 0.0f); break;
+		case Qt::Key_R:
+			mCamera.incOrientation(0.0f, rotSpeed); break;
+		case Qt::Key_F:
+			mCamera.incOrientation(0.0f, -rotSpeed); break;
 		}
 	}
 
@@ -155,8 +158,9 @@ private:
     QOpenGLShaderProgram mProgram;
 	QOpenGLVertexArrayObject mVao;
 	const int mSize = 16;
+	const float mHeight = 10.0f;
 	GLuint tex;
-	bool mWireframe = true;
+	bool mWireframe = false;
 
 	Camera mCamera;
 

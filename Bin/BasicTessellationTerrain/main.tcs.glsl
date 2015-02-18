@@ -17,7 +17,7 @@ void main()
 {
 	if (gl_InvocationID == 0)
 	{
-		const int base = 5;
+		const int base = 3;
 	
 		gl_TessLevelOuter[0] = base;
 		gl_TessLevelOuter[1] = base;
