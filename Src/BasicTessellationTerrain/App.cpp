@@ -34,6 +34,8 @@ public:
 
 			if (!mProgram.link())
 				qFatal("Error linking shaders");
+
+			mProgram.bind();
 		}
 
 		//grab uniform locations
@@ -98,14 +100,14 @@ public:
 			//glUniformMatrix4fv(mUniforms.mvMatrix, 1, GL_FALSE, glm::value_ptr(mCamera.viewMatrix()));
 			//glUniformMatrix4fv(mUniforms.projMatrix, 1, GL_FALSE, glm::value_ptr(mCamera.perspectiveMatrix()));
 
-			//do shit
+			if (true)
 			{
 				static float totalTime = 0.0f;
-				totalTime += 0.05f;
+				totalTime += 0.01f;
 
 				float t = (float)totalTime * 0.03f;
 				float r = sinf(t * 5.37f) * 15.0f + 16.0f;
-				float h = cosf(t * 4.79f) * 2.0f + 30.0f;
+				float h = cosf(t * 4.79f) * 2.0f + 10.2f;
 
 				Mat4 mvMatrix = glm::lookAt(Vec3(sinf(t) * r, h, cosf(t) * r), Vec3(0.0f), Vec3(0.0f, 1.0f, 0.0f));
 				Mat4 projMatrix = glm::perspective(60.0f, (float)width() / (float)height(), 0.1f, 1000.0f);
@@ -114,9 +116,10 @@ public:
 			}
 
 			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_TRUE);
 			glDepthFunc(GL_LEQUAL);
 
-			//glPolygonMode(GL_FRONT_AND_BACK, mWireframe ? GL_LINE : GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, mWireframe ? GL_LINE : GL_FILL);
 			glDrawArraysInstanced(GL_PATCHES, 0, 4, mSize*mSize);
 		}
 		mVao.release();
@@ -151,9 +154,9 @@ public:
 private:
     QOpenGLShaderProgram mProgram;
 	QOpenGLVertexArrayObject mVao;
-	const int mSize = 64;
+	const int mSize = 16;
 	GLuint tex;
-	bool mWireframe = false;
+	bool mWireframe = true;
 
 	Camera mCamera;
 

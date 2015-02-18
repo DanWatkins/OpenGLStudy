@@ -37,3 +37,4 @@ IDE/OpenGLStudy.vcxproj.dan.nvuser
 Bin/nsight_profiler.cfg
 ComputeShader/GeneratedFiles/
 *.lib
+IDE/

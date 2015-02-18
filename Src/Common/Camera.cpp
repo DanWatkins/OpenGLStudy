@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera() :
-	mPosition(-20, 0, -20),
+	mPosition(-20, 20, -20),
 	mHorizontalAngle(0.0f),
 	mVerticalAngle(0.0f),
 	mFieldOfView(50.0f),
@@ -10,7 +10,7 @@ Camera::Camera() :
 	mAspectRatio(1), 
 	mMaxVerticalAngle(95.0f)
 {
-	lookAt(Vec3(60, 20, 60));
+	lookAt(Vec3(0, 0, 0));
 }
 
 

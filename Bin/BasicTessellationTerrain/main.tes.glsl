@@ -1,6 +1,6 @@
 #version 430 core
 
-layout (quads) in;
+layout (quads, fractional_odd_spacing) in;
 
 out TCSOut
 {
